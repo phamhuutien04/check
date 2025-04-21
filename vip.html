@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm Tra Thiết Bị Siêu Nâng Cao</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-6">Kiểm Tra Thiết Bị Siêu Nâng Cao</h1>
+        <div id="info-container" class="space-y-6">
+            <!-- Độ Tin Cậy và Trạng Thái Duyệt -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Độ Tin Cậy và Trạng Thái</h2>
+                <table class="w-full">
+                    <tbody>
+                        <tr><td class="font-medium">Độ Tin Cậy:</td><td id="reliability">Đang tính...</td></tr>
+                        <tr><td class="font-medium">Trạng Thái Duyệt:</td><td id="approval-status">Đang kiểm tra...</td></tr>
+                        <tr><td class="font-medium">Lý Do:</td><td id="approval-reason">Đang kiểm tra...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nguồn Truy Cập -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Nguồn Truy Cập</h2>
+                <table class="w-full">
+                    <tbody id="source-info">
+                        <tr><td class="font-medium">Đại Lý Người Dùng:</td><td id="user-agent">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Trang Giới Thiệu:</td><td id="referrer">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Địa Chỉ IP:</td><td id="ip-address">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Loại Mạng:</td><td id="network-type">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Tiêu Đề HTTP:</td><td id="http-headers">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Thông Tin Thiết Bị -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Thông Tin Thiết Bị</h2>
+                <table class="w-full">
+                    <tbody id="device-info">
+                        <tr><td class="font-medium">Độ Phân Giải Màn Hình:</td><td id="screen-resolution">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Kích Thước Khung Nhìn:</td><td id="viewport-size">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Bộ Nhớ Thiết Bị:</td><td id="device-memory">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Số Lõi CPU:</td><td id="cpu-cores">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Trạng Thái Pin:</td><td id="battery-status">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Hỗ Trợ Cảm Ứng:</td><td id="touch-support">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Thông Tin Trình Duyệt -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Thông Tin Trình Duyệt</h2>
+                <table class="w-full">
+                    <tbody id="browser-info">
+                        <tr><td class="font-medium">Nhà Cung Cấp WebGL:</td><td id="webgl-vendor">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Bộ Xử Lý WebGL:</td><td id="webgl-renderer">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Tần Số Mẫu Âm Thanh:</td><td id="audio-sample-rate">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Ngôn Ngữ:</td><td id="languages">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Cookie Được Bật:</td><td id="cookies-enabled">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Bộ Nhớ Cục Bộ:</td><td id="local-storage">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Dấu Vân Tay Canvas:</td><td id="canvas-fingerprint">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Thông Tin Mạng -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Thông Tin Mạng</h2>
+                <table class="w-full">
+                    <tbody id="network-info">
+                        <tr><td class="font-medium">Loại Kết Nối:</td><td id="connection-type">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Thời Gian Phản Hồi:</td><td id="rtt">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Tốc Độ Tải Xuống:</td><td id="downlink">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Tiết Kiệm Dữ Liệu:</td><td id="save-data">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Độ Trễ Mạng:</td><td id="network-latency">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân Tích Siêu Nâng Cao -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Phân Tích Siêu Nâng Cao</h2>
+                <table class="w-full">
+                    <tbody id="advanced-info">
+                        <tr><td class="font-medium">Dấu Vân Tay WebGL:</td><td id="webgl-fingerprint">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Dấu Vân Tay WebRTC:</td><td id="webrtc-fingerprint">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Cảm Biến Thiết Bị:</td><td id="device-sensors">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Hiệu Suất CPU/GPU:</td><td id="performance-benchmark">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Danh Sách Plugin:</td><td id="navigator-plugins">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Múi Giờ:</td><td id="timezone-offset">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Client Hints:</td><td id="client-hints">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Phông Chữ Mở Rộng:</td><td id="extended-fonts">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Navigator Properties:</td><td id="navigator-props">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân Tích Hành Vi -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Phân Tích Hành Vi</h2>
+                <table class="w-full">
+                    <tbody id="behavior-info">
+                        <tr><td class="font-medium">Số Lần Chạm:</td><td id="touch-count">0</td></tr>
+                        <tr><td class="font-medium">Tốc Độ Chạm Trung Bình:</td><td id="touch-speed">Đang ghi...</td></tr>
+                        <tr><td class="font-medium">Áp Lực Chạm:</td><td id="touch-pressure">Đang ghi...</td></tr>
+                        <tr><td class="font-medium">Tính Ngẫu Nhiên:</td><td id="touch-randomness">Đang ghi...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Thông Tin Khác -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-2">Thông Tin Khác</h2>
+                <table class="w-full">
+                    <tbody id="other-info">
+                        <tr><td class="font-medium">WebRTC Được Bật:</td><td id="webrtc-enabled">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Phông Chữ Phát Hiện:</td><td id="fonts-detected">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Nền Tảng:</td><td id="platform">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Không Theo Dõi:</td><td id="do-not-track">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Webdriver:</td><td id="webdriver">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hàm hỗ trợ cập nhật DOM
+        function updateElement(id, value) {
+            document.getElementById(id).textContent = value || 'Không khả dụng';
+        }
+
+        // Hàm tính độ tin cậy
+        function calculateReliability() {
+            let score = 0;
+
+            // User Agent (10 điểm)
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
+            score += isMobile && !userAgent.includes('bot') ? 10 : 2;
+
+            // Hỗ trợ cảm ứng (10 điểm)
+            const touchPoints = navigator.maxTouchPoints || 0;
+            score += touchPoints > 0 ? 10 : 0;
+
+            // Độ phân giải màn hình (8 điểm)
+            const screenWidth = screen.width;
+            const screenHeight = screen.height;
+            const isPhoneScreen = (screenWidth >= 320 && screenWidth <= 1440) && (screenHeight >= 480 && screenHeight <= 3200);
+            score += isPhoneScreen ? 8 : 2;
+
+            // Trạng thái pin (8 điểm)
+            const hasBattery = !!navigator.getBattery;
+            score += hasBattery ? 8 : 2;
+
+            // WebGL (8 điểm)
+            const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
+            const hasWebGL = !!gl;
+            let webGLValid = false;
+            if (hasWebGL) {
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
+                webGLValid = renderer.includes('Adreno') || renderer.includes('Mali') || renderer.includes('Apple') || renderer.includes('PowerVR');
+            }
+            score += hasWebGL && webGLValid ? 8 : 2;
+
+            // Kết nối mạng (8 điểm)
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const hasConnection = !!connection;
+            const validConnection = hasConnection && ['slow-2g', '2g', '3g', '4g', 'wifi'].includes(connection.effectiveType);
+            score += hasConnection && validConnection ? 8 : 2;
+
+            // Audio Context (7 điểm)
+            const AudioContext2 = window.AudioContext || window.webkitAudioContext;
+            const hasAudio = !!AudioContext2;
+            let audioValid = false;
+            if (hasAudio) {
+                const ctx = new AudioContext2();
+                audioValid = [44100, 48000].includes(ctx.sampleRate);
+                ctx.close();
+            }
+            score += hasAudio && audioValid ? 7 : 2;
+
+            // WebRTC (7 điểm)
+            const hasWebRTC = !!(window.RTCPeerConnection || window.webkitRTCPeerConnection);
+            score += hasWebRTC ? 7 : 3;
+
+            // Cảm biến thiết bị (7 điểm)
+            const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
+            score += hasSensors ? 7 : 2;
+
+            // Hiệu suất CPU/GPU (7 điểm)
+            let performanceScore = 0;
+            const start = performance.now();
+            for (let i = 0; i < 2000000; i++) Math.sin(Math.random());
+            const end = performance.now();
+            const duration = end - start;
+            performanceScore = duration < 150 ? 7 : duration < 300 ? 4 : 2;
+            score += performanceScore;
+
+            // Navigator Plugins (6 điểm)
+            const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name) : [];
+            const hasFewPlugins = plugins.length <= 2;
+            score += hasFewPlugins ? 6 : 2;
+
+            // Múi giờ/IP (6 điểm)
+            const timezoneOffset = new Date().getTimezoneOffset();
+            const isValidTimezone = timezoneOffset >= -720 && timezoneOffset <= 720;
+            score += isValidTimezone ? 6 : 2;
+
+            // Client Hints (6 điểm)
+            const hasClientHints = !!navigator.userAgentData;
+            score += hasClientHints ? 6 : 2;
+
+            // Font Fingerprinting (6 điểm)
+            const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato'];
+            const hasFonts = detectFonts(fonts).length > 0;
+            score += hasFonts ? 6 : 2;
+
+            // Hành vi cảm ứng/chuột (6 điểm)
+            let behaviorScore = touchEvents.length > 0 ? (isTouchBehaviorNatural() ? 6 : 3) : 2;
+            score += behaviorScore;
+
+            return Math.min(score, 100);
+        }
+
+        // Hàm kiểm tra duyệt thiết bị
+        function checkApproval(reliability) {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
+            const touchPoints = navigator.maxTouchPoints || 0;
+            const webdriver = navigator.webdriver || false;
+            const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name) : [];
+            const hasFewPlugins = plugins.length <= 2;
+            const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
+            const isNaturalBehavior = touchEvents.length > 0 ? isTouchBehaviorNatural() : false;
+
+            if (isMobile && touchPoints > 0 && reliability >= 90 && !webdriver && hasFewPlugins && hasSensors && isNaturalBehavior) {
+                return { approved: true, reason: 'Thiết bị được xác định là điện thoại thật với hành vi tự nhiên.' };
+            } else {
+                let reason = 'Thiết bị không được duyệt vì: ';
+                if (!isMobile) reason += 'Không phải trình duyệt di động. ';
+                if (touchPoints === 0) reason += 'Không hỗ trợ cảm ứng. ';
+                if (reliability < 90) reason += 'Độ tin cậy thấp. ';
+                if (webdriver) reason += 'Phát hiện giả lập (webdriver). ';
+                if (!hasFewPlugins) reason += 'Quá nhiều plugin bất thường. ';
+                if (!hasSensors) reason += 'Thiếu hỗ trợ cảm biến thiết bị. ';
+                if (!isNaturalBehavior) reason += 'Hành vi cảm ứng không tự nhiên, nghi ngờ bot. ';
+                return { approved: false, reason };
+            }
+        }
+
+        // Phân tích hành vi cảm ứng
+        let touchEvents = [];
+        document.addEventListener('touchstart', e => {
+            touchEvents.push({
+                time: Date.now(),
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY,
+                pressure: e.touches[0].force || 0,
+                angle: e.touches[0].rotationAngle || 0
+            });
+            updateElement('touch-count', touchEvents.length);
+            updateTouchBehavior();
+        });
+
+        function isTouchBehaviorNatural() {
+            if (touchEvents.length < 2) return false;
+            let speeds = [], pressures = [], randomness = 0;
+            for (let i = 1; i < touchEvents.length; i++) {
+                const dx = touchEvents[i].x - touchEvents[i-1].x;
+                const dy = touchEvents[i].y - touchEvents[i-1].y;
+                const dt = touchEvents[i].time - touchEvents[i-1].time;
+                const speed = Math.sqrt(dx*dx + dy*dy) / dt;
+                speeds.push(speed);
+                pressures.push(touchEvents[i].pressure);
+                randomness += Math.abs(dx) + Math.abs(dy);
+            }
+            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            const avgPressure = pressures.reduce((a, b) => a + b, 0) / pressures.length;
+            return avgSpeed > 0.1 && avgSpeed < 2 && avgPressure > 0 && randomness > 50;
+        }
+
+        function updateTouchBehavior() {
+            if (touchEvents.length < 2) return;
+            const speeds = touchEvents.slice(1).map((e, i) => {
+                const dx = e.x - touchEvents[i].x;
+                const dy = e.y - touchEvents[i].y;
+                const dt = e.time - touchEvents[i].time;
+                return Math.sqrt(dx*dx + dy*dy) / dt;
+            });
+            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            const avgPressure = touchEvents.reduce((a, b) => a + b.pressure, 0) / touchEvents.length;
+            const randomness = touchEvents.reduce((a, e, i) => i > 0 ? a + Math.abs(e.x - touchEvents[i-1].x) + Math.abs(e.y - touchEvents[i-1].y) : a, 0);
+            updateElement('touch-speed', `${avgSpeed.toFixed(2)} px/ms`);
+            updateElement('touch-pressure', `${avgPressure.toFixed(2)}`);
+            updateElement('touch-randomness', `${randomness.toFixed(2)} px`);
+        }
+
+        // Cập nhật độ tin cậy và trạng thái duyệt
+        setTimeout(() => {
+            const reliability = calculateReliability();
+            const approval = checkApproval(reliability);
+            updateElement('reliability', `${reliability}%`);
+            updateElement('approval-status', approval.approved ? 'Được duyệt' : 'Không được duyệt');
+            updateElement('approval-reason', approval.reason);
+        }, 2000); // Chờ hành vi cảm ứng
+
+        // Nguồn Truy Cập
+        updateElement('user-agent', navigator.userAgent);
+        updateElement('referrer', document.referrer || 'Không có');
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => updateElement('ip-address', data.ip || 'Không xác định'))
+            .catch(() => updateElement('ip-address', 'Không thể lấy'));
+
+        // Tiêu đề HTTP
+        fetch('/headers', { method: 'GET' })
+            .then(response => response.json())
+            .then(data => updateElement('http-headers', JSON.stringify(data, null, 2)))
+            .catch(() => updateElement('http-headers', 'Yêu cầu backend phụ trợ'));
+
+        // Loại Mạng và Độ Trễ
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        updateElement('network-type', connection ? connection.effectiveType : 'Không hỗ trợ');
+        updateElement('rtt', connection ? `${connection.rtt} ms` : 'Không hỗ trợ');
+        updateElement('downlink', connection ? `${connection.downlink} Mbps` : 'Không hỗ trợ');
+        updateElement('save-data', connection ? (connection.saveData ? 'Bật' : 'Tắt') : 'Không hỗ trợ');
+
+        // Đo độ trễ mạng
+        const resourceStart = performance.now();
+        fetch('https://www.google.com/favicon.ico')
+            .then(() => {
+                const resourceEnd = performance.now();
+                updateElement('network-latency', `${(resourceEnd - resourceStart).toFixed(2)} ms`);
+            })
+            .catch(() => updateElement('network-latency', 'Không thể đo'));
+
+        // Thông Tin Thiết Bị
+        updateElement('screen-resolution', `${screen.width}x${screen.height} (Độ sâu màu: ${screen.colorDepth})`);
+        updateElement('viewport-size', `${window.innerWidth}x${window.innerHeight}`);
+        updateElement('device-memory', navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Không hỗ trợ');
+        updateElement('cpu-cores', navigator.hardwareConcurrency || 'Không khả dụng');
+        updateElement('touch-support', navigator.maxTouchPoints > 0 ? `Có (${navigator.maxTouchPoints} điểm)` : 'Không');
+
+        // Trạng Thái Pin
+        if (navigator.getBattery) {
+            navigator.getBattery().then(battery => {
+                updateElement('battery-status', 
+                    `${(battery.level * 100).toFixed(0)}% (${battery.charging ? 'Đang sạc' : 'Không sạc'})`);
+            });
+        } else {
+            updateElement('battery-status', 'Không hỗ trợ');
+        }
+
+        // Thông Tin Trình Duyệt
+        const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
+        if (gl) {
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            updateElement('webgl-vendor', debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'Không khả dụng');
+            updateElement('webgl-renderer', debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Không khả dụng');
+        } else {
+            updateElement('webgl-vendor', 'Không hỗ trợ');
+            updateElement('webgl-renderer', 'Không hỗ trợ');
+        }
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+            const ctx = new AudioContext();
+            updateElement('audio-sample-rate', `${ctx.sampleRate} Hz`);
+            ctx.close();
+        } else {
+            updateElement('audio-sample-rate', 'Không hỗ trợ');
+        }
+
+        updateElement('languages', navigator.languages ? navigator.languages.join(', ') : navigator.language);
+        updateElement('cookies-enabled', navigator.cookieEnabled ? 'Có' : 'Không');
+        updateElement('local-storage', window.localStorage ? 'Khả dụng' : 'Không khả dụng');
+
+        // Dấu Vân Tay Canvas
+        function getCanvasFingerprint() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 100;
+            const ctx = canvas.getContext('2d');
+            ctx.font = '16px Arial';
+            ctx.fillStyle = 'rgb(255,0,0)';
+            ctx.fillText('Kiểm Tra Dấu Vân Tay Siêu Nâng Cao 😎', 2, 20);
+            const gradient = ctx.createLinearGradient(0, 0, 200, 0);
+            gradient.addColorStop(0, 'blue');
+            gradient.addColorStop(1, 'green');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(20, 30, 160, 50);
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = 'yellow';
+            ctx.fillText('Shadow Test', 30, 70);
+            return canvas.toDataURL().substring(0, 50) + '...';
+        }
+        updateElement('canvas-fingerprint', getCanvasFingerprint());
+
+        // Phân Tích Siêu Nâng Cao
+        // Dấu Vân Tay WebGL
+        function getWebGLFingerprint() {
+            if (!gl) return 'Không hỗ trợ';
+            const extensions = gl.getSupportedExtensions().join(', ');
+            const program = gl.createProgram();
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(vertexShader, 'void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }');
+            gl.shaderSource(fragmentShader, 'void main() { gl_FragColor = vec4(1.0, 0.5, 0.0, 1.0); }');
+            gl.compileShader(vertexShader);
+            gl.compileShader(fragmentShader);
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+            const pixels = new Uint8Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            return `Pixels: ${pixels.join(',')}, Extensions: ${extensions.substring(0, 50)}...`;
+        }
+        updateElement('webgl-fingerprint', getWebGLFingerprint());
+
+        // Dấu Vân Tay WebRTC
+        function getWebRTCFingerprint() {
+            if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) return 'Không hỗ trợ';
+            const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+            const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            let fingerprint = 'ICE: ';
+            pc.createDataChannel('test');
+            pc.createOffer().then(offer => {
+                pc.setLocalDescription(offer);
+                fingerprint += `SDP: ${offer.sdp.substring(0, 50)}... `;
+            });
+            pc.onicecandidate = event => {
+                if (event.candidate) {
+                    fingerprint += event.candidate.candidate.substring(0, 50) + '; ';
+                }
+            };
+            setTimeout(() => {
+                updateElement('webrtc-fingerprint', fingerprint || 'Không thu thập được');
+                pc.close();
+            }, 1500);
+            return 'Đang thu thập...';
+        }
+        updateElement('webrtc-fingerprint', getWebRTCFingerprint());
+
+        // Cảm Biến Thiết Bị
+        let sensorData = 'Không phát hiện';
+        if (window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate) {
+            window.addEventListener('deviceorientation', event => {
+                sensorData = `Định hướng: Alpha=${event.alpha?.toFixed(2)}, Beta=${event.beta?.toFixed(2)}, Gamma=${event.gamma?.toFixed(2)}`;
+                updateElement('device-sensors', sensorData);
+            }, { once: true });
+            window.addEventListener('devicemotion', event => {
+                sensorData = `Gia tốc: X=${event.acceleration?.x?.toFixed(2)}, Y=${event.acceleration?.y?.toFixed(2)}, Z=${event.acceleration?.z?.toFixed(2)}`;
+                updateElement('device-sensors', sensorData);
+            }, { once: true });
+            if (navigator.vibrate) {
+                navigator.vibrate(100); // Kích hoạt rung
+                sensorData += '; Rung: Hỗ trợ';
+                updateElement('device-sensors', sensorData);
+            }
+        }
+        updateElement('device-sensors', sensorData);
+
+        // Hiệu Suất CPU/GPU
+        const performanceResult = (function() {
+            const start = performance.now();
+            for (let i = 0; i < 2000000; i++) Math.sin(Math.random());
+            const domStart = performance.now();
+            const div = document.createElement('div');
+            document.body.appendChild(div);
+            document.body.removeChild(div);
+            const end = performance.now();
+            return `Toán: ${(domStart - start).toFixed(2)} ms, DOM: ${(end - domStart).toFixed(2)} ms`;
+        })();
+        updateElement('performance-benchmark', performanceResult);
+
+        // Danh Sách Plugin
+        const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name).join(', ') : 'Không có';
+        updateElement('navigator-plugins', plugins);
+
+        // Múi Giờ
+        const timezoneOffset = new Date().getTimezoneOffset();
+        updateElement('timezone-offset', `${timezoneOffset / -60} giờ (UTC${timezoneOffset > 0 ? '-' : '+'}${Math.abs(timezoneOffset / 60)})`);
+
+        // Client Hints
+        if (navigator.userAgentData) {
+            navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile', 'architecture', 'bitness', 'brands']).then(hints => {
+                updateElement('client-hints', JSON.stringify(hints, null, 2));
+            });
+        } else {
+            updateElement('client-hints', 'Không hỗ trợ');
+        }
+
+        // Phông Chữ Mở Rộng
+        function detectFonts(fontList) {
+            const fonts = fontList || ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Ubuntu', 'Trebuchet MS'];
+            const testFont = 'monospace';
+            const span = document.createElement('span');
+            span.style.fontSize = '72px';
+            span.innerHTML = 'mmmmmmmmmmlli';
+            span.style.position = 'absolute';
+            span.style.left = '-9999px';
+            document.body.appendChild(span);
+            const defaultWidth = span.offsetWidth;
+            span.style.fontFamily = testFont;
+            const defaultHeight = span.offsetHeight;
+            const availableFonts = [];
+            fonts.forEach(font => {
+                span.style.fontFamily = `"${font}",${testFont}`;
+                if (span.offsetWidth !== defaultWidth || span.offsetHeight !== defaultHeight) {
+                    availableFonts.push(font);
+                }
+            });
+            document.body.removeChild(span);
+            return availableFonts;
+        }
+        updateElement('extended-fonts', detectFonts().join(', ') || 'Không phát hiện');
+
+        // Navigator Properties
+        const navigatorProps = {
+            vendor: navigator.vendor,
+            product: navigator.product,
+            oscpu: navigator.oscpu,
+            buildID: navigator.buildID,
+            appVersion: navigator.appVersion,
+            appName: navigator.appName,
+            appCodeName: navigator.appCodeName
+        };
+        updateElement('navigator-props', JSON.stringify(navigatorProps, null, 2));
+
+        // Thông Tin Khác
+        updateElement('webrtc-enabled', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'Có' : 'Không');
+        updateElement('platform', navigator.platform || 'Không khả dụng');
+        updateElement('do-not-track', navigator.doNotTrack ? (navigator.doNotTrack === '1' ? 'Bật' : 'Tắt') : 'Không thiết lập');
+        updateElement('webdriver', navigator.webdriver ? 'Có' : 'Không');
+        updateElement('fonts-detected', detectFonts(['Arial', 'Helvetica']).join(', ') || 'Không phát hiện');
+    </script>
+</body>
+</html>
