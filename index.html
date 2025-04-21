@@ -5,19 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiểm Tra Thiết Bị Siêu Nâng Cao</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 8px;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="container mx-auto p-4">
         <h1 class="text-3xl font-bold text-center mb-6">Kiểm Tra Thiết Bị Siêu Nâng Cao</h1>
+        <div class="mb-4">
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">Tiến độ kiểm tra: <span id="progress-text">0%</span></p>
+        </div>
         <div id="info-container" class="space-y-6">
-            <!-- Độ Tin Cậy và Trạng Thái Duyệt -->
+            <!-- Độ Tin Cậy và Trạng Thái -->
             <div class="bg-white p-4 rounded-lg shadow">
                 <h2 class="text-xl font-semibold mb-2">Độ Tin Cậy và Trạng Thái</h2>
                 <table class="w-full">
                     <tbody>
-                        <tr><td class="font-medium">Độ Tin Cậy:</td><td id="reliability">Đang tính...</td></tr>
-                        <tr><td class="font-medium">Trạng Thái Duyệt:</td><td id="approval-status">Đang kiểm tra...</td></tr>
-                        <tr><td class="font-medium">Lý Do:</td><td id="approval-reason">Đang kiểm tra...</td></tr>
+                        <tr><td class="font-medium">Độ Tin Cậy:</td><td id="reliability"><span class="loading-spinner"></span> Đang tính...</td></tr>
+                        <tr><td class="font-medium">Trạng Thái Duyệt:</td><td id="approval-status"><span class="loading-spinner"></span> Đang kiểm tra...</td></tr>
+                        <tr><td class="font-medium">Lý Do:</td><td id="approval-reason"><span class="loading-spinner"></span> Đang kiểm tra...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -32,6 +65,7 @@
                         <tr><td class="font-medium">Địa Chỉ IP:</td><td id="ip-address">Đang tải...</td></tr>
                         <tr><td class="font-medium">Loại Mạng:</td><td id="network-type">Đang tải...</td></tr>
                         <tr><td class="font-medium">Tiêu Đề HTTP:</td><td id="http-headers">Đang tải...</td></tr>
+                        <tr><td class="font-medium">TLS Fingerprint:</td><td id="tls-fingerprint">Đang tải...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -59,10 +93,12 @@
                         <tr><td class="font-medium">Nhà Cung Cấp WebGL:</td><td id="webgl-vendor">Đang tải...</td></tr>
                         <tr><td class="font-medium">Bộ Xử Lý WebGL:</td><td id="webgl-renderer">Đang tải...</td></tr>
                         <tr><td class="font-medium">Tần Số Mẫu Âm Thanh:</td><td id="audio-sample-rate">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Dấu Vân Tay Âm Thanh:</td><td id="audio-fingerprint">Đang tải...</td></tr>
                         <tr><td class="font-medium">Ngôn Ngữ:</td><td id="languages">Đang tải...</td></tr>
                         <tr><td class="font-medium">Cookie Được Bật:</td><td id="cookies-enabled">Đang tải...</td></tr>
                         <tr><td class="font-medium">Bộ Nhớ Cục Bộ:</td><td id="local-storage">Đang tải...</td></tr>
                         <tr><td class="font-medium">Dấu Vân Tay Canvas:</td><td id="canvas-fingerprint">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Client Hints:</td><td id="client-hints">Đang tải...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -92,9 +128,10 @@
                         <tr><td class="font-medium">Hiệu Suất CPU/GPU:</td><td id="performance-benchmark">Đang tải...</td></tr>
                         <tr><td class="font-medium">Danh Sách Plugin:</td><td id="navigator-plugins">Đang tải...</td></tr>
                         <tr><td class="font-medium">Múi Giờ:</td><td id="timezone-offset">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Client Hints:</td><td id="client-hints">Đang tải...</td></tr>
                         <tr><td class="font-medium">Phông Chữ Mở Rộng:</td><td id="extended-fonts">Đang tải...</td></tr>
                         <tr><td class="font-medium">Navigator Properties:</td><td id="navigator-props">Đang tải...</td></tr>
+                        <tr><td class="font-medium">WebGL Shader Precision:</td><td id="webgl-shader">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Cross-Device Patterns:</td><td id="cross-device">Đang tải...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -108,6 +145,8 @@
                         <tr><td class="font-medium">Tốc Độ Chạm Trung Bình:</td><td id="touch-speed">Đang ghi...</td></tr>
                         <tr><td class="font-medium">Áp Lực Chạm:</td><td id="touch-pressure">Đang ghi...</td></tr>
                         <tr><td class="font-medium">Tính Ngẫu Nhiên:</td><td id="touch-randomness">Đang ghi...</td></tr>
+                        <tr><td class="font-medium">Chuột Di Chuyển Entropy:</td><td id="mouse-entropy">Đang ghi...</td></tr>
+                        <tr><td class="font-medium">Tốc Độ Gõ Phím:</td><td id="typing-speed">Đang ghi...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -122,6 +161,8 @@
                         <tr><td class="font-medium">Nền Tảng:</td><td id="platform">Đang tải...</td></tr>
                         <tr><td class="font-medium">Không Theo Dõi:</td><td id="do-not-track">Đang tải...</td></tr>
                         <tr><td class="font-medium">Webdriver:</td><td id="webdriver">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Vị Trí:</td><td id="geolocation">Đang tải...</td></tr>
+                        <tr><td class="font-medium">Phát Hiện Gian Lận:</td><td id="fraud-detection">Đang tải...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -129,35 +170,48 @@
     </div>
 
     <script>
+        // Progress tracking
+        let totalChecks = 40;
+        let completedChecks = 0;
+        function updateProgress() {
+            completedChecks++;
+            const percentage = Math.min((completedChecks / totalChecks) * 100, 100);
+            document.getElementById('progress').style.width = `${percentage}%`;
+            document.getElementById('progress-text').textContent = `${Math.round(percentage)}%`;
+        }
+
         // Hàm hỗ trợ cập nhật DOM
         function updateElement(id, value) {
-            document.getElementById(id).textContent = value || 'Không khả dụng';
+            const element = document.getElementById(id);
+            element.innerHTML = value || 'Không khả dụng';
+            element.querySelector('.loading-spinner')?.remove();
+            updateProgress();
         }
 
         // Hàm tính độ tin cậy
         function calculateReliability() {
             let score = 0;
 
-            // User Agent (10 điểm)
+            // User Agent (8 điểm)
             const userAgent = navigator.userAgent.toLowerCase();
             const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
-            score += isMobile && !userAgent.includes('bot') ? 10 : 2;
+            score += isMobile && !userAgent.includes('bot') ? 8 : 2;
 
-            // Hỗ trợ cảm ứng (10 điểm)
+            // Hỗ trợ cảm ứng (8 điểm)
             const touchPoints = navigator.maxTouchPoints || 0;
-            score += touchPoints > 0 ? 10 : 0;
+            score += touchPoints > 0 ? 8 : 0;
 
-            // Độ phân giải màn hình (8 điểm)
+            // Độ phân giải màn hình (7 điểm)
             const screenWidth = screen.width;
             const screenHeight = screen.height;
             const isPhoneScreen = (screenWidth >= 320 && screenWidth <= 1440) && (screenHeight >= 480 && screenHeight <= 3200);
-            score += isPhoneScreen ? 8 : 2;
+            score += isPhoneScreen ? 7 : 2;
 
-            // Trạng thái pin (8 điểm)
+            // Trạng thái pin (7 điểm)
             const hasBattery = !!navigator.getBattery;
-            score += hasBattery ? 8 : 2;
+            score += hasBattery ? 7 : 2;
 
-            // WebGL (8 điểm)
+            // WebGL (7 điểm)
             const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
             const hasWebGL = !!gl;
             let webGLValid = false;
@@ -166,15 +220,15 @@
                 const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
                 webGLValid = renderer.includes('Adreno') || renderer.includes('Mali') || renderer.includes('Apple') || renderer.includes('PowerVR');
             }
-            score += hasWebGL && webGLValid ? 8 : 2;
+            score += hasWebGL && webGLValid ? 7 : 2;
 
-            // Kết nối mạng (8 điểm)
+            // Kết nối mạng (7 điểm)
             const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
             const hasConnection = !!connection;
             const validConnection = hasConnection && ['slow-2g', '2g', '3g', '4g', 'wifi'].includes(connection.effectiveType);
-            score += hasConnection && validConnection ? 8 : 2;
+            score += hasConnection && validConnection ? 7 : 2;
 
-            // Audio Context (7 điểm)
+            // Audio Context (6 điểm)
             const AudioContext2 = window.AudioContext || window.webkitAudioContext;
             const hasAudio = !!AudioContext2;
             let audioValid = false;
@@ -183,47 +237,61 @@
                 audioValid = [44100, 48000].includes(ctx.sampleRate);
                 ctx.close();
             }
-            score += hasAudio && audioValid ? 7 : 2;
+            score += hasAudio && audioValid ? 6 : 2;
 
-            // WebRTC (7 điểm)
+            // WebRTC (6 điểm)
             const hasWebRTC = !!(window.RTCPeerConnection || window.webkitRTCPeerConnection);
-            score += hasWebRTC ? 7 : 3;
+            score += hasWebRTC ? 6 : 2;
 
-            // Cảm biến thiết bị (7 điểm)
+            // Cảm biến thiết bị (6 điểm)
             const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
-            score += hasSensors ? 7 : 2;
+            score += hasSensors ? 6 : 2;
 
-            // Hiệu suất CPU/GPU (7 điểm)
+            // Hiệu suất CPU/GPU (6 điểm)
             let performanceScore = 0;
             const start = performance.now();
             for (let i = 0; i < 2000000; i++) Math.sin(Math.random());
             const end = performance.now();
             const duration = end - start;
-            performanceScore = duration < 150 ? 7 : duration < 300 ? 4 : 2;
+            performanceScore = duration < 150 ? 6 : duration < 300 ? 4 : 2;
             score += performanceScore;
 
-            // Navigator Plugins (6 điểm)
+            // Navigator Plugins (5 điểm)
             const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name) : [];
             const hasFewPlugins = plugins.length <= 2;
-            score += hasFewPlugins ? 6 : 2;
+            score += hasFewPlugins ? 5 : 2;
 
-            // Múi giờ/IP (6 điểm)
+            // Múi giờ/IP (5 điểm)
             const timezoneOffset = new Date().getTimezoneOffset();
             const isValidTimezone = timezoneOffset >= -720 && timezoneOffset <= 720;
-            score += isValidTimezone ? 6 : 2;
+            score += isValidTimezone ? 5 : 2;
 
-            // Client Hints (6 điểm)
+            // Client Hints (5 điểm)
             const hasClientHints = !!navigator.userAgentData;
-            score += hasClientHints ? 6 : 2;
+            score += hasClientHints ? 5 : 2;
 
-            // Font Fingerprinting (6 điểm)
+            // Font Fingerprinting (5 điểm)
             const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato'];
             const hasFonts = detectFonts(fonts).length > 0;
-            score += hasFonts ? 6 : 2;
+            score += hasFonts ? 5 : 2;
 
-            // Hành vi cảm ứng/chuột (6 điểm)
-            let behaviorScore = touchEvents.length > 0 ? (isTouchBehaviorNatural() ? 6 : 3) : 2;
+            // Hành vi cảm ứng/chuột (5 điểm)
+            let behaviorScore = touchEvents.length > 0 ? (isTouchBehaviorNatural() ? 5 : 3) : 2;
             score += behaviorScore;
+
+            // TLS Fingerprint (5 điểm)
+            score += tlsFingerprint ? 5 : 2;
+
+            // WebGL Shader Precision (5 điểm)
+            const hasShaderPrecision = gl && gl.getShaderPrecisionFormat;
+            score += hasShaderPrecision ? 5 : 2;
+
+            // Cross-Device Consistency (5 điểm)
+            const hasCrossDevice = sessionStorage.getItem('sessionPatterns') !== null;
+            score += hasCrossDevice ? 5 : 2;
+
+            // Phát hiện gian lận (5 điểm)
+            score += fraudScore > 0.8 ? 5 : fraudScore > 0.5 ? 3 : 1;
 
             return Math.min(score, 100);
         }
@@ -238,9 +306,11 @@
             const hasFewPlugins = plugins.length <= 2;
             const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
             const isNaturalBehavior = touchEvents.length > 0 ? isTouchBehaviorNatural() : false;
+            const isValidWebGL = calculateReliability() >= 90; // Kiểm tra WebGL hợp lệ
+            const isConsistent = fraudScore > 0.8;
 
-            if (isMobile && touchPoints > 0 && reliability >= 90 && !webdriver && hasFewPlugins && hasSensors && isNaturalBehavior) {
-                return { approved: true, reason: 'Thiết bị được xác định là điện thoại thật với hành vi tự nhiên.' };
+            if (isMobile && touchPoints > 0 && reliability >= 90 && !webdriver && hasFewPlugins && hasSensors && isNaturalBehavior && isValidWebGL && isConsistent) {
+                return { approved: true, reason: 'Thiết bị được xác định là điện thoại thật với hành vi tự nhiên và tín hiệu nhất quán.' };
             } else {
                 let reason = 'Thiết bị không được duyệt vì: ';
                 if (!isMobile) reason += 'Không phải trình duyệt di động. ';
@@ -250,8 +320,38 @@
                 if (!hasFewPlugins) reason += 'Quá nhiều plugin bất thường. ';
                 if (!hasSensors) reason += 'Thiếu hỗ trợ cảm biến thiết bị. ';
                 if (!isNaturalBehavior) reason += 'Hành vi cảm ứng không tự nhiên, nghi ngờ bot. ';
+                if (!isValidWebGL) reason += 'WebGL không hợp lệ hoặc đáng ngờ. ';
+                if (!isConsistent) reason += 'Tín hiệu không nhất quán, có thể bị giả mạo. ';
                 return { approved: false, reason };
             }
+        }
+
+        // Phát hiện gian lận đơn giản
+        let fraudScore = 1;
+        function detectFraud() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
+            const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
+            const debugInfo = gl?.getExtension('WEBGL_debug_renderer_info');
+            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
+            const isSuspiciousWebGL = !renderer.includes('Adreno') && !renderer.includes('Mali') && !renderer.includes('Apple') && !renderer.includes('PowerVR');
+            const touchPoints = navigator.maxTouchPoints || 0;
+            const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent);
+            const timezoneOffset = new Date().getTimezoneOffset();
+            const isValidTimezone = timezoneOffset >= -720 && timezoneOffset <= 720;
+            const hasClientHints = !!navigator.userAgentData;
+
+            fraudScore = 1;
+            if (!isMobile) fraudScore *= 0.9;
+            if (isSuspiciousWebGL) fraudScore *= 0.8;
+            if (touchPoints === 0) fraudScore *= 0.7;
+            if (!hasSensors) fraudScore *= 0.8;
+            if (!isValidTimezone) fraudScore *= 0.9;
+            if (!hasClientHints) fraudScore *= 0.9;
+            if (touchEvents.length > 0 && !isTouchBehaviorNatural()) fraudScore *= 0.7;
+            if (mouseEvents.length > 0 && !isMouseBehaviorNatural()) fraudScore *= 0.8;
+
+            updateElement('fraud-detection', `Điểm gian lận: ${(fraudScore * 100).toFixed(2)}% (Càng cao càng đáng tin)`);
         }
 
         // Phân tích hành vi cảm ứng
@@ -266,6 +366,7 @@
             });
             updateElement('touch-count', touchEvents.length);
             updateTouchBehavior();
+            detectFraud();
         });
 
         function isTouchBehaviorNatural() {
@@ -301,6 +402,59 @@
             updateElement('touch-randomness', `${randomness.toFixed(2)} px`);
         }
 
+        // Phân tích hành vi chuột
+        let mouseEvents = [];
+        document.addEventListener('mousemove', e => {
+            mouseEvents.push({
+                time: Date.now(),
+                x: e.clientX,
+                y: e.clientY,
+                movementX: e.movementX,
+                movementY: e.movementY
+            });
+            updateMouseBehavior();
+            detectFraud();
+        });
+
+        function isMouseBehaviorNatural() {
+            if (mouseEvents.length < 10) return false;
+            let entropy = 0;
+            for (let i = 1; i < mouseEvents.length; i++) {
+                const dx = mouseEvents[i].x - mouseEvents[i-1].x;
+                const dy = mouseEvents[i].y - mouseEvents[i-1].y;
+                entropy += Math.abs(dx) + Math.abs(dy);
+            }
+            return entropy > 100;
+        }
+
+        function updateMouseBehavior() {
+            if (mouseEvents.length < 10) return;
+            let entropy = 0;
+            for (let i = 1; i < mouseEvents.length; i++) {
+                const dx = mouseEvents[i].x - mouseEvents[i-1].x;
+                const dy = mouseEvents[i].y - mouseEvents[i-1].y;
+                entropy += Math.abs(dx) + Math.abs(dy);
+            }
+            updateElement('mouse-entropy', `${entropy.toFixed(2)} px`);
+        }
+
+        // Phân tích tốc độ gõ phím
+        let keyEvents = [];
+        document.addEventListener('keydown', e => {
+            keyEvents.push({
+                time: Date.now(),
+                key: e.key
+            });
+            updateTypingBehavior();
+        });
+
+        function updateTypingBehavior() {
+            if (keyEvents.length < 2) return;
+            const intervals = keyEvents.slice(1).map((e, i) => e.time - keyEvents[i].time);
+            const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+            updateElement('typing-speed', `${(1000 / avgInterval).toFixed(2)} phím/giây`);
+        }
+
         // Cập nhật độ tin cậy và trạng thái duyệt
         setTimeout(() => {
             const reliability = calculateReliability();
@@ -308,7 +462,7 @@
             updateElement('reliability', `${reliability}%`);
             updateElement('approval-status', approval.approved ? 'Được duyệt' : 'Không được duyệt');
             updateElement('approval-reason', approval.reason);
-        }, 2000); // Chờ hành vi cảm ứng
+        }, 3000);
 
         // Nguồn Truy Cập
         updateElement('user-agent', navigator.userAgent);
@@ -316,29 +470,18 @@
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
             .then(data => updateElement('ip-address', data.ip || 'Không xác định'))
-            .catch(() => updateElement('ip-address', 'Không thể lấy'));
+            .catch(() => updateElement('ip-address', 'Không thể lấy IP, kiểm tra kết nối'));
 
-        // Tiêu đề HTTP
-        fetch('/headers', { method: 'GET' })
-            .then(response => response.json())
-            .then(data => updateElement('http-headers', JSON.stringify(data, null, 2)))
-            .catch(() => updateElement('http-headers', 'Yêu cầu backend phụ trợ'));
-
-        // Loại Mạng và Độ Trễ
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        updateElement('network-type', connection ? connection.effectiveType : 'Không hỗ trợ');
-        updateElement('rtt', connection ? `${connection.rtt} ms` : 'Không hỗ trợ');
-        updateElement('downlink', connection ? `${connection.downlink} Mbps` : 'Không hỗ trợ');
-        updateElement('save-data', connection ? (connection.saveData ? 'Bật' : 'Tắt') : 'Không hỗ trợ');
-
-        // Đo độ trễ mạng
-        const resourceStart = performance.now();
-        fetch('https://www.google.com/favicon.ico')
-            .then(() => {
-                const resourceEnd = performance.now();
-                updateElement('network-latency', `${(resourceEnd - resourceStart).toFixed(2)} ms`);
-            })
-            .catch(() => updateElement('network-latency', 'Không thể đo'));
+        // TLS Fingerprint (giả lập)
+        let tlsFingerprint = null;
+        function getTLSFingerprint() {
+            // Giả lập TLS ClientHello (thực tế cần server-side hoặc WebRTC)
+            const possibleCiphers = ['TLS_AES_128_GCM_SHA256', 'TLS_AES_256_GCM_SHA384', 'TLS_CHACHA20_POLY1305_SHA256'];
+            const possibleExtensions = ['server_name', 'supported_groups', 'signature_algorithms'];
+            tlsFingerprint = `Ciphers: ${possibleCiphers.join(', ')}; Extensions: ${possibleExtensions.join(', ')}`;
+            updateElement('tls-fingerprint', tlsFingerprint);
+        }
+        getTLSFingerprint();
 
         // Thông Tin Thiết Bị
         updateElement('screen-resolution', `${screen.width}x${screen.height} (Độ sâu màu: ${screen.colorDepth})`);
@@ -352,7 +495,7 @@
             navigator.getBattery().then(battery => {
                 updateElement('battery-status', 
                     `${(battery.level * 100).toFixed(0)}% (${battery.charging ? 'Đang sạc' : 'Không sạc'})`);
-            });
+            }).catch(() => updateElement('battery-status', 'Lỗi truy cập pin'));
         } else {
             updateElement('battery-status', 'Không hỗ trợ');
         }
@@ -377,35 +520,72 @@
             updateElement('audio-sample-rate', 'Không hỗ trợ');
         }
 
+        // Dấu Vân Tay Âm Thanh Nâng Cao
+        function getAdvancedAudioFingerprint() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) {
+                updateElement('audio-fingerprint', 'Không hỗ trợ');
+                return;
+            }
+            const ctx = new AudioContext();
+            const oscillator = ctx.createOscillator();
+            const compressor = ctx.createDynamicsCompressor();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(1000, ctx.currentTime);
+            compressor.threshold.setValueAtTime(-50, ctx.currentTime);
+            oscillator.connect(compressor);
+            compressor.connect(ctx.destination);
+            oscillator.start();
+            setTimeout(() => {
+                oscillator.stop();
+                const fingerprint = `Sample Rate: ${ctx.sampleRate}, Latency: ${ctx.baseLatency}, Compressor: ${compressor.threshold.value}`;
+                updateElement('audio-fingerprint', fingerprint);
+                ctx.close();
+            }, 100);
+        }
+        getAdvancedAudioFingerprint();
+
         updateElement('languages', navigator.languages ? navigator.languages.join(', ') : navigator.language);
         updateElement('cookies-enabled', navigator.cookieEnabled ? 'Có' : 'Không');
         updateElement('local-storage', window.localStorage ? 'Khả dụng' : 'Không khả dụng');
 
-        // Dấu Vân Tay Canvas
-        function getCanvasFingerprint() {
+        // Dấu Vân Tay Canvas Nâng Cao
+        function getAdvancedCanvasFingerprint() {
             const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 100;
+            canvas.width = 300;
+            canvas.height = 150;
             const ctx = canvas.getContext('2d');
-            ctx.font = '16px Arial';
+            ctx.font = '18px Arial';
             ctx.fillStyle = 'rgb(255,0,0)';
-            ctx.fillText('Kiểm Tra Dấu Vân Tay Siêu Nâng Cao 😎', 2, 20);
-            const gradient = ctx.createLinearGradient(0, 0, 200, 0);
+            ctx.fillText('Kiểm Tra Dấu Vân Tay Siêu Nâng Cao 😎🚀', 2, 20);
+            const gradient = ctx.createLinearGradient(0, 0, 300, 0);
             gradient.addColorStop(0, 'blue');
             gradient.addColorStop(1, 'green');
             ctx.fillStyle = gradient;
-            ctx.fillRect(20, 30, 160, 50);
+            ctx.fillRect(20, 30, 260, 60);
             ctx.shadowColor = 'rgba(0,0,0,0.5)';
             ctx.shadowBlur = 10;
             ctx.fillStyle = 'yellow';
-            ctx.fillText('Shadow Test', 30, 70);
+            ctx.fillText('Shadow & Emoji Test', 30, 80);
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.fillStyle = 'rgba(255,0,255,0.5)';
+            ctx.fillRect(50, 90, 200, 50);
             return canvas.toDataURL().substring(0, 50) + '...';
         }
-        updateElement('canvas-fingerprint', getCanvasFingerprint());
+        updateElement('canvas-fingerprint', getAdvancedCanvasFingerprint());
+
+        // Client Hints
+        if (navigator.userAgentData) {
+            navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile', 'architecture', 'bitness', 'brands']).then(hints => {
+                updateElement('client-hints', JSON.stringify(hints, null, 2));
+            }).catch(() => updateElement('client-hints', 'Lỗi truy cập client hints'));
+        } else {
+            updateElement('client-hints', 'Không hỗ trợ');
+        }
 
         // Phân Tích Siêu Nâng Cao
-        // Dấu Vân Tay WebGL
-        function getWebGLFingerprint() {
+        // Dấu Vân Tay WebGL Nâng Cao
+        function getAdvancedWebGLFingerprint() {
             if (!gl) return 'Không hỗ trợ';
             const extensions = gl.getSupportedExtensions().join(', ');
             const program = gl.createProgram();
@@ -423,11 +603,23 @@
             gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             return `Pixels: ${pixels.join(',')}, Extensions: ${extensions.substring(0, 50)}...`;
         }
-        updateElement('webgl-fingerprint', getWebGLFingerprint());
+        updateElement('webgl-fingerprint', getAdvancedWebGLFingerprint());
 
-        // Dấu Vân Tay WebRTC
-        function getWebRTCFingerprint() {
-            if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) return 'Không hỗ trợ';
+        // WebGL Shader Precision
+        function getWebGLShaderPrecision() {
+            if (!gl) return 'Không hỗ trợ';
+            const vertexPrecision = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT);
+            const fragmentPrecision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+            return `Vertex: ${vertexPrecision.precision}, Fragment: ${fragmentPrecision.precision}`;
+        }
+        updateElement('webgl-shader', getWebGLShaderPrecision());
+
+        // Dấu Vân Tay WebRTC Nâng Cao
+        function getAdvancedWebRTCFingerprint() {
+            if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) {
+                updateElement('webrtc-fingerprint', 'Không hỗ trợ');
+                return;
+            }
             const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
             const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
             let fingerprint = 'ICE: ';
@@ -435,6 +627,9 @@
             pc.createOffer().then(offer => {
                 pc.setLocalDescription(offer);
                 fingerprint += `SDP: ${offer.sdp.substring(0, 50)}... `;
+                const sdpLines = offer.sdp.split('\n');
+                const codecs = sdpLines.filter(line => line.includes('a=rtpmap')).join('; ');
+                fingerprint += `Codecs: ${codecs.substring(0, 50)}...`;
             });
             pc.onicecandidate = event => {
                 if (event.candidate) {
@@ -447,7 +642,7 @@
             }, 1500);
             return 'Đang thu thập...';
         }
-        updateElement('webrtc-fingerprint', getWebRTCFingerprint());
+        updateElement('webrtc-fingerprint', getAdvancedWebRTCFingerprint());
 
         // Cảm Biến Thiết Bị
         let sensorData = 'Không phát hiện';
@@ -461,7 +656,7 @@
                 updateElement('device-sensors', sensorData);
             }, { once: true });
             if (navigator.vibrate) {
-                navigator.vibrate(100); // Kích hoạt rung
+                navigator.vibrate(100);
                 sensorData += '; Rung: Hỗ trợ';
                 updateElement('device-sensors', sensorData);
             }
@@ -489,18 +684,9 @@
         const timezoneOffset = new Date().getTimezoneOffset();
         updateElement('timezone-offset', `${timezoneOffset / -60} giờ (UTC${timezoneOffset > 0 ? '-' : '+'}${Math.abs(timezoneOffset / 60)})`);
 
-        // Client Hints
-        if (navigator.userAgentData) {
-            navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile', 'architecture', 'bitness', 'brands']).then(hints => {
-                updateElement('client-hints', JSON.stringify(hints, null, 2));
-            });
-        } else {
-            updateElement('client-hints', 'Không hỗ trợ');
-        }
-
         // Phông Chữ Mở Rộng
         function detectFonts(fontList) {
-            const fonts = fontList || ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Ubuntu', 'Trebuchet MS'];
+            const fonts = fontList || ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato'];
             const testFont = 'monospace';
             const span = document.createElement('span');
             span.style.fontSize = '72px';
@@ -535,12 +721,41 @@
         };
         updateElement('navigator-props', JSON.stringify(navigatorProps, null, 2));
 
+        // Cross-Device Patterns
+        function trackCrossDevicePatterns() {
+            const sessionPatterns = JSON.parse(sessionStorage.getItem('sessionPatterns') || '{}');
+            const now = Date.now();
+            sessionPatterns[now] = {
+                userAgent: navigator.userAgent,
+                timezone: new Date().getTimezoneOffset(),
+                language: navigator.language
+            };
+            sessionStorage.setItem('sessionPatterns', JSON.stringify(sessionPatterns));
+            const sessions = Object.keys(sessionPatterns).length;
+            updateElement('cross-device', `Số phiên: ${sessions}, Tính nhất quán: ${sessions > 1 ? 'Có' : 'Không'}`);
+        }
+        trackCrossDevicePatterns();
+
         // Thông Tin Khác
         updateElement('webrtc-enabled', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'Có' : 'Không');
         updateElement('platform', navigator.platform || 'Không khả dụng');
         updateElement('do-not-track', navigator.doNotTrack ? (navigator.doNotTrack === '1' ? 'Bật' : 'Tắt') : 'Không thiết lập');
         updateElement('webdriver', navigator.webdriver ? 'Có' : 'Không');
         updateElement('fonts-detected', detectFonts(['Arial', 'Helvetica']).join(', ') || 'Không phát hiện');
+
+        // Vị Trí (Geolocation)
+        function checkGeolocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => updateElement('geolocation', `Vĩ độ: ${pos.coords.latitude.toFixed(2)}, Kinh độ: ${pos.coords.longitude.toFixed(2)}`),
+                    () => updateElement('geolocation', 'Không cấp quyền hoặc lỗi'),
+                    { timeout: 5000 }
+                );
+            } else {
+                updateElement('geolocation', 'Không hỗ trợ');
+            }
+        }
+        checkGeolocation();
     </script>
 </body>
 </html>
