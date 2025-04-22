@@ -3,726 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm Tra Thiết Bị Siêu Nâng Cao</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Phân Tích Thiết Bị Người Dùng</title>
     <style>
-        table { border-collapse: collapse; width: 100%; }
-        td, th { border: 1px solid #ddd; padding: 8px; }
-        tr:nth-child(even) { background-color: #f2f2f2; }
-        .error { color: red; }
-        .loading { color: gray; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f6fa;
+            color: #2d3436;
+        }
+        h1 {
+            text-align: center;
+            color: #2f3542;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .category {
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .category h2 {
+            margin: 0 0 15px;
+            color: #1e90ff;
+            font-size: 1.6em;
+            border-bottom: 2px solid #dfe4ea;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #f1f2f6;
+            width: 35%;
+            font-weight: 600;
+        }
+        td {
+            background: #fff;
+        }
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #636e72;
+            padding: 20px;
+        }
+        .error {
+            color: #e74c3c;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                display: block;
+                width: 100%;
+            }
+            th {
+                background: #dfe4ea;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold text-center mb-6">Kiểm Tra Thiết Bị Siêu Nâng Cao</h1>
-        <div id="info-container" class="space-y-6">
-            <!-- Độ Tin Cậy và Trạng Thái Duyệt -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Độ Tin Cậy và Trạng Thái</h2>
-                <table>
-                    <tbody>
-                        <tr><td class="font-medium">Độ Tin Cậy:</td><td id="reliability" class="loading">Đang tính...</td></tr>
-                        <tr><td class="font-medium">Trạng Thái Duyệt:</td><td id="approval-status" class="loading">Đang kiểm tra...</td></tr>
-                        <tr><td class="font-medium">Lý Do:</td><td id="approval-reason" class="loading">Đang kiểm tra...</td></tr>
-                        <tr><td class="font-medium">Chế Độ Ẩn Danh:</td><td id="incognito-mode">Đang kiểm tra...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Nguồn Truy Cập -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Nguồn Truy Cập</h2>
-                <table>
-                    <tbody id="source-info">
-                        <tr><td class="font-medium">Đại Lý Người Dùng:</td><td id="user-agent">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Trang Giới Thiệu:</td><td id="referrer">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Địa Chỉ IP:</td><td id="ip-address">Đang tải...</td></tr>
-                        <tr><td class="font-medium">ISP:</td><td id="isp">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Loại Mạng:</td><td id="network-type">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Tiêu Đề HTTP:</td><td id="http-headers">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Thông Tin Thiết Bị -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Thông Tin Thiết Bị</h2>
-                <table>
-                    <tbody id="device-info">
-                        <tr><td class="font-medium">Độ Phân Giải Màn Hình:</td><td id="screen-resolution">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Kích Thước Khung Nhìn:</td><td id="viewport-size">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Bộ Nhớ Thiết Bị:</td><td id="device-memory">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Số Lõi CPU:</td><td id="cpu-cores">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Trạng Thái Pin:</td><td id="battery-status">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Hỗ Trợ Cảm Ứng:</td><td id="touch-support">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Hệ Điều Hành:</td><td id="os-info">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Thông Tin Trình Duyệt -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Thông Tin Trình Duyệt</h2>
-                <table>
-                    <tbody id="browser-info">
-                        <tr><td class="font-medium">Nhà Cung Cấp WebGL:</td><td id="webgl-vendor">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Bộ Xử Lý WebGL:</td><td id="webgl-renderer">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Tần Số Mẫu Âm Thanh:</td><td id="audio-sample-rate">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Ngôn Ngữ:</td><td id="languages">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Cookie Được Bật:</td><td id="cookies-enabled">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Bộ Nhớ Cục Bộ:</td><td id="local-storage">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Dấu Vân Tay Canvas:</td><td id="canvas-fingerprint">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Dấu Vân Tay Audio:</td><td id="audio-fingerprint">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Thông Tin Mạng -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Thông Tin Mạng</h2>
-                <table>
-                    <tbody id="network-info">
-                        <tr><td class="font-medium">Loại Kết Nối:</td><td id="connection-type">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Thời Gian Phản Hồi:</td><td id="rtt">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Tốc Độ Tải Xuống:</td><td id="downlink">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Tiết Kiệm Dữ Liệu:</td><td id="save-data">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Độ Trễ Mạng:</td><td id="network-latency">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Băng Thông Thực Tế:</td><td id="bandwidth">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Phân Tích Siêu Nâng Cao -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Phân Tích Siêu Nâng Cao</h2>
-                <table>
-                    <tbody id="advanced-info">
-                        <tr><td class="font-medium">Dấu Vân Tay WebGL:</td><td id="webgl-fingerprint">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Dấu Vân Tay WebRTC:</td><td id="webrtc-fingerprint">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Cảm Biến Thiết Bị:</td><td id="device-sensors">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Cảm Biến Ánh Sáng:</td><td id="light-sensor">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Hiệu Suất CPU/GPU:</td><td id="performance-benchmark">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Danh Sách Plugin:</td><td id="navigator-plugins">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Múi Giờ:</td><td id="timezone-offset">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Client Hints:</td><td id="client-hints">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Phông Chữ Mở Rộng:</td><td id="extended-fonts">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Navigator Properties:</td><td id="navigator-props">Đang tải...</td></tr>
-                        <tr><td class="font-medium">DevTools Được Mở:</td><td id="devtools-opened">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Phân Tích Hành Vi -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Phân Tích Hành Vi</h2>
-                <table>
-                    <tbody id="behavior-info">
-                        <tr><td class="font-medium">Số Lần Chạm:</td><td id="touch-count">0</td></tr>
-                        <tr><td class="font-medium">Tốc Độ Chạm Trung Bình:</td><td id="touch-speed">Đang ghi...</td></tr>
-                        <tr><td class="font-medium">Áp Lực Chạm:</td><td id="touch-pressure">Đang ghi...</td></tr>
-                        <tr><td class="font-medium">Tính Ngẫu Nhiên Chạm:</td><td id="touch-randomness">Đang ghi...</td></tr>
-                        <tr><td class="font-medium">Số Lần Di Chuyển Chuột:</td><td id="mouse-move-count">0</td></tr>
-                        <tr><td class="font-medium">Tốc Độ Chuột Trung Bình:</td><td id="mouse-speed">Đang ghi...</td></tr>
-                        <tr><td class="font-medium">Số Lần Nhấn Phím:</td><td id="key-press-count">0</td></tr>
-                        <tr><td class="font-medium">Thời Gian Gõ Phím Trung Bình:</td><td id="key-press-time">Đang ghi...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Thông Tin Khác -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold mb-2">Thông Tin Khác</h2>
-                <table>
-                    <tbody id="other-info">
-                        <tr><td class="font-medium">WebRTC Được Bật:</td><td id="webrtc-enabled">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Phông Chữ Phát Hiện:</td><td id="fonts-detected">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Nền Tảng:</td><td id="platform">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Không Theo Dõi:</td><td id="do-not-track">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Webdriver:</td><td id="webdriver">Đang tải...</td></tr>
-                        <tr><td class="font-medium">Trình Duyệt Giả Lập:</td><td id="emulation-detected">Đang tải...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<body>
+    <h1>Phân Tích Toàn Diện Thiết Bị Người Dùng</h1>
+    <div class="container" id="output">
+        <p class="loading">Đang thu thập và phân tích thông tin thiết bị...</p>
     </div>
 
     <script>
-        // Hàm hỗ trợ cập nhật DOM
-        function updateElement(id, value) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.textContent = value || 'Không khả dụng';
-                element.classList.remove('loading');
-                if (value === 'Lỗi') element.classList.add('error');
-            }
-        }
+        async function getDeviceInfo() {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = ''; // Xóa thông báo đang tải
 
-        // Hàm tạo hash từ chuỗi (cho dấu vân tay)
-        async function hashString(str) {
-            try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(str);
-                const hash = await crypto.subtle.digest('SHA-256', data);
-                return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-            } catch {
-                return 'Không hỗ trợ';
-            }
-        }
-
-        // Hàm tính độ tin cậy
-        async function calculateReliability() {
-            let score = 0;
-
-            // User Agent (10 điểm)
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
-            score += isMobile && !userAgent.includes('bot') ? 10 : 2;
-
-            // Hỗ trợ cảm ứng (10 điểm)
-            const touchPoints = navigator.maxTouchPoints || 0;
-            score += touchPoints > 0 ? 10 : 0;
-
-            // Độ phân giải màn hình (8 điểm)
-            const screenWidth = screen.width;
-            const screenHeight = screen.height;
-            const isPhoneScreen = (screenWidth >= 320 && screenWidth <= 1440) && (screenHeight >= 480 && screenHeight <= 3200);
-            score += isPhoneScreen ? 8 : 2;
-
-            // Trạng thái pin (8 điểm)
-            const hasBattery = !!navigator.getBattery;
-            score += hasBattery ? 8 : 2;
-
-            // WebGL (8 điểm)
-            const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
-            const hasWebGL = !!gl;
-            let webGLValid = false;
-            if (hasWebGL) {
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
-                webGLValid = renderer.includes('Adreno') || renderer.includes('Mali') || renderer.includes('Apple') || renderer.includes('PowerVR');
-            }
-            score += hasWebGL && webGLValid ? 8 : 2;
-
-            // Kết nối mạng (8 điểm)
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            const hasConnection = !!connection;
-            const validConnection = hasConnection && ['slow-2g', '2g', '3g', '4g', 'wifi'].includes(connection.effectiveType);
-            score += hasConnection && validConnection ? 8 : 2;
-
-            // Audio Context (7 điểm)
-            const AudioContext2 = window.AudioContext || window.webkitAudioContext;
-            const hasAudio = !!AudioContext2;
-            let audioValid = false;
-            if (hasAudio) {
-                const ctx = new AudioContext2();
-                audioValid = [44100, 48000].includes(ctx.sampleRate);
-                ctx.close();
-            }
-            score += hasAudio && audioValid ? 7 : 2;
-
-            // WebRTC (7 điểm)
-            const hasWebRTC = !!(window.RTCPeerConnection || window.webkitRTCPeerConnection);
-            score += hasWebRTC ? 7 : 3;
-
-            // Cảm biến thiết bị (7 điểm)
-            const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
-            score += hasSensors ? 7 : 2;
-
-            // Hiệu suất CPU/GPU (7 điểm)
-            let performanceScore = 0;
-            const start = performance.now();
-            for (let i = 0; i < 2000000; i++) Math.sin(Math.random());
-            const end = performance.now();
-            const duration = end - start;
-            performanceScore = duration < 150 ? 7 : duration < 300 ? 4 : 2;
-            score += performanceScore;
-
-            // Navigator Plugins (6 điểm)
-            const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name) : [];
-            const hasFewPlugins = plugins.length <= 2;
-            score += hasFewPlugins ? 6 : 2;
-
-            // Múi giờ/IP (6 điểm)
-            const timezoneOffset = new Date().getTimezoneOffset();
-            const isValidTimezone = timezoneOffset >= -720 && timezoneOffset <= 720;
-            score += isValidTimezone ? 6 : 2;
-
-            // Client Hints (6 điểm)
-            const hasClientHints = !!navigator.userAgentData;
-            score += hasClientHints ? 6 : 2;
-
-            // Font Fingerprinting (6 điểm)
-            const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato'];
-            const hasFonts = detectFonts(fonts).length > 0;
-            score += hasFonts ? 6 : 2;
-
-            // Hành vi cảm ứng/chuột (6 điểm)
-            let behaviorScore = touchEvents.length > 0 ? (isTouchBehaviorNatural() ? 6 : 3) : mouseEvents.length > 0 ? (isMouseBehaviorNatural() ? 5 : 2) : 2;
-            score += behaviorScore;
-
-            // Kiểm tra chế độ ẩn danh (5 điểm)
-            const isIncognito = await detectIncognito();
-            score += !isIncognito ? 5 : 2;
-
-            // Kiểm tra DevTools (5 điểm)
-            const devToolsOpen = detectDevTools();
-            score += !devToolsOpen ? 5 : 2;
-
-            return Math.min(score, 100);
-        }
-
-        // Hàm kiểm tra duyệt thiết bị
-        async function checkApproval(reliability) {
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isMobile = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone') || userAgent.includes('ipad');
-            const touchPoints = navigator.maxTouchPoints || 0;
-            const webdriver = navigator.webdriver || false;
-            const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name) : [];
-            const hasFewPlugins = plugins.length <= 2;
-            const hasSensors = !!(window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate);
-            const isNaturalBehavior = touchEvents.length > 0 ? isTouchBehaviorNatural() : mouseEvents.length > 0 ? isMouseBehaviorNatural() : false;
-            const isIncognito = await detectIncognito();
-            const devToolsOpen = detectDevTools();
-
-            if (isMobile && touchPoints > 0 && reliability >= 90 && !webdriver && hasFewPlugins && hasSensors && isNaturalBehavior && !isIncognito && !devToolsOpen) {
-                return { approved: true, reason: 'Thiết bị được xác định là điện thoại thật với hành vi tự nhiên.' };
-            } else {
-                let reason = 'Thiết bị không được duyệt vì: ';
-                if (!isMobile) reason += 'Không phải trình duyệt di động. ';
-                if (touchPoints === 0) reason += 'Không hỗ trợ cảm ứng. ';
-                if (reliability < 90) reason += 'Độ tin cậy thấp. ';
-                if (webdriver) reason += 'Phát hiện giả lập (webdriver). ';
-                if (!hasFewPlugins) reason += 'Quá nhiều plugin bất thường. ';
-                if (!hasSensors) reason += 'Thiếu hỗ trợ cảm biến thiết bị. ';
-                if (!isNaturalBehavior) reason += 'Hành vi không tự nhiên, nghi ngờ bot. ';
-                if (isIncognito) reason += 'Chế độ ẩn danh được bật. ';
-                if (devToolsOpen) reason += 'DevTools đang mở. ';
-                return { approved: false, reason };
-            }
-        }
-
-        // Phân tích hành vi cảm ứng
-        let touchEvents = [];
-        document.addEventListener('touchstart', e => {
-            touchEvents.push({
-                time: Date.now(),
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY,
-                pressure: e.touches[0].force || 0,
-                angle: e.touches[0].rotationAngle || 0
-            });
-            updateElement('touch-count', touchEvents.length);
-            updateTouchBehavior();
-        });
-
-        function isTouchBehaviorNatural() {
-            if (touchEvents.length < 2) return false;
-            let speeds = [], pressures = [], randomness = 0;
-            for (let i = 1; i < touchEvents.length; i++) {
-                const dx = touchEvents[i].x - touchEvents[i - 1].x;
-                const dy = touchEvents[i].y - touchEvents[i - 1].y;
-                const dt = touchEvents[i].time - touchEvents[i - 1].time;
-                const speed = Math.sqrt(dx * dx + dy * dy) / dt;
-                speeds.push(speed);
-                pressures.push(touchEvents[i].pressure);
-                randomness += Math.abs(dx) + Math.abs(dy);
-            }
-            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-            const avgPressure = pressures.reduce((a, b) => a + b, 0) / pressures.length;
-            return avgSpeed > 0.1 && avgSpeed < 2 && avgPressure > 0 && randomness > 50;
-        }
-
-        function updateTouchBehavior() {
-            if (touchEvents.length < 2) return;
-            const speeds = touchEvents.slice(1).map((e, i) => {
-                const dx = e.x - touchEvents[i].x;
-                const dy = e.y - touchEvents[i].y;
-                const dt = e.time - touchEvents[i].time;
-                return Math.sqrt(dx * dx + dy * dy) / dt;
-            });
-            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-            const avgPressure = touchEvents.reduce((a, b) => a + b.pressure, 0) / touchEvents.length;
-            const randomness = touchEvents.reduce((a, e, i) => i > 0 ? a + Math.abs(e.x - touchEvents[i - 1].x) + Math.abs(e.y - touchEvents[i - 1].y) : a, 0);
-            updateElement('touch-speed', `${avgSpeed.toFixed(2)} px/ms`);
-            updateElement('touch-pressure', `${avgPressure.toFixed(2)}`);
-            updateElement('touch-randomness', `${randomness.toFixed(2)} px`);
-        }
-
-        // Phân tích hành vi chuột
-        let mouseEvents = [];
-        document.addEventListener('mousemove', e => {
-            mouseEvents.push({
-                time: Date.now(),
-                x: e.clientX,
-                y: e.clientY
-            });
-            updateElement('mouse-move-count', mouseEvents.length);
-            updateMouseBehavior();
-        });
-
-        function isMouseBehaviorNatural() {
-            if (mouseEvents.length < 2) return false;
-            let speeds = [], distances = 0;
-            for (let i = 1; i < mouseEvents.length; i++) {
-                const dx = mouseEvents[i].x - mouseEvents[i - 1].x;
-                const dy = mouseEvents[i].y - mouseEvents[i - 1].y;
-                const dt = mouseEvents[i].time - mouseEvents[i - 1].time;
-                const speed = Math.sqrt(dx * dx + dy * dy) / dt;
-                speeds.push(speed);
-                distances += Math.abs(dx) + Math.abs(dy);
-            }
-            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-            return avgSpeed > 0.05 && avgSpeed < 5 && distances > 100;
-        }
-
-        function updateMouseBehavior() {
-            if (mouseEvents.length < 2) return;
-            const speeds = mouseEvents.slice(1).map((e, i) => {
-                const dx = e.x - mouseEvents[i].x;
-                const dy = e.y - mouseEvents[i].y;
-                const dt = e.time - mouseEvents[i].time;
-                return Math.sqrt(dx * dx + dy * dy) / dt;
-            });
-            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
-            updateElement('mouse-speed', `${avgSpeed.toFixed(2)} px/ms`);
-        }
-
-        // Phân tích hành vi bàn phím
-        let keyEvents = [];
-        document.addEventListener('keydown', e => {
-            keyEvents.push({
-                time: Date.now(),
-                key: e.key
-            });
-            updateElement('key-press-count', keyEvents.length);
-            updateKeyBehavior();
-        });
-
-        function updateKeyBehavior() {
-            if (keyEvents.length < 2) return;
-            const intervals = keyEvents.slice(1).map((e, i) => e.time - keyEvents[i].time);
-            const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-            updateElement('key-press-time', `${avgInterval.toFixed(2)} ms`);
-        }
-
-        // Kiểm tra chế độ ẩn danh
-        async function detectIncognito() {
-            try {
-                const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-                if (!fs) return false;
-                return new Promise(resolve => {
-                    fs(window.TEMPORARY, 100, () => resolve(false), () => resolve(true));
-                });
-            } catch {
-                return false;
-            }
-        }
-
-        // Kiểm tra DevTools
-        function detectDevTools() {
-            const threshold = 160;
-            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-            return widthThreshold || heightThreshold;
-        }
-
-        // Cập nhật độ tin cậy và trạng thái duyệt
-        setTimeout(async () => {
-            const reliability = await calculateReliability();
-            const approval = await checkApproval(reliability);
-            updateElement('reliability', `${reliability}%`);
-            updateElement('approval-status', approval.approved ? 'Được duyệt' : 'Không được duyệt');
-            updateElement('approval-reason', approval.reason);
-            updateElement('incognito-mode', await detectIncognito() ? 'Có' : 'Không');
-            updateElement('devtools-opened', detectDevTools() ? 'Có' : 'Không');
-        }, 2000);
-
-        // Nguồn Truy Cập
-        updateElement('user-agent', navigator.userAgent);
-        updateElement('referrer', document.referrer || 'Không có');
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => updateElement('ip-address', data.ip || 'Không xác rozpołąd định'))
-            .catch(() => updateElement('ip-address', 'Không thể lấy'));
-        fetch('https://ipapi.co/json/')
-            .then(response => response.json())
-            .then(data => updateElement('isp', data.org || 'Không xác định'))
-            .catch(() => updateElement('isp', 'Không thể lấy'));
-
-        // Tiêu đề HTTP
-        fetch('/headers', { method: 'GET' })
-            .then(response => response.json())
-            .then(data => updateElement('http-headers', JSON.stringify(data, null, 2)))
-            .catch(() => updateElement('http-headers', 'Yêu cầu backend phụ trợ'));
-
-        // Loại Mạng và Độ Trễ
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        updateElement('network-type', connection ? connection.effectiveType : 'Không hỗ trợ');
-        updateElement('rtt', connection ? `${connection.rtt} ms` : 'Không hỗ trợ');
-        updateElement('downlink', connection ? `${connection.downlink} Mbps` : 'Không hỗ trợ');
-        updateElement('save-data', connection ? (connection.saveData ? 'Bật' : 'Tắt') : 'Không hỗ trợ');
-
-        // Đo độ trễ mạng
-        const resourceStart = performance.now();
-        fetch('https://www.google.com/favicon.ico')
-            .then(() => {
-                const resourceEnd = performance.now();
-                updateElement('network-latency', `${(resourceEnd - resourceStart).toFixed(2)} ms`);
-            })
-            .catch(() => updateElement('network-latency', 'Không thể đo'));
-
-        // Đo băng thông
-        async function measureBandwidth() {
-            try {
-                const start = performance.now();
-                const response = await fetch('https://via.placeholder.com/150');
-                const end = performance.now();
-                const duration = (end - start) / 1000; // giây
-                const size = 150 * 150 * 3; // ước lượng kích thước ảnh
-                const speed = (size / duration) / 1024 / 1024; // MB/s
-                updateElement('bandwidth', `${speed.toFixed(2)} MB/s`);
-            } catch {
-                updateElement('bandwidth', 'Không thể đo');
-            }
-        }
-        measureBandwidth();
-
-        // Thông Tin Thiết Bị
-        updateElement('screen-resolution', `${screen.width}x${screen.height} (Độ sâu màu: ${screen.colorDepth})`);
-        updateElement('viewport-size', `${window.innerWidth}x${window.innerHeight}`);
-        updateElement('device-memory', navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Không hỗ trợ');
-        updateElement('cpu-cores', navigator.hardwareConcurrency || 'Không khả dụng');
-        updateElement('touch-support', navigator.maxTouchPoints > 0 ? `Có (${navigator.maxTouchPoints} điểm)` : 'Không');
-        updateElement('os-info', navigator.platform || 'Không khả dụng');
-
-        // Trạng Thái Pin
-        if (navigator.getBattery) {
-            navigator.getBattery().then(battery => {
-                updateElement('battery-status', `${(battery.level * 100).toFixed(0)}% (${battery.charging ? 'Đang sạc' : 'Không sạc'})`);
-            });
-        } else {
-            updateElement('battery-status', 'Không hỗ trợ');
-        }
-
-        // Thông Tin Trình Duyệt
-        const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
-        if (gl) {
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            updateElement('webgl-vendor', debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'Không khả dụng');
-            updateElement('webgl-renderer', debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Không khả dụng');
-        } else {
-            updateElement('webgl-vendor', 'Không hỗ trợ');
-            updateElement('webgl-renderer', 'Không hỗ trợ');
-        }
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-            const ctx = new AudioContext();
-            updateElement('audio-sample-rate', `${ctx.sampleRate} Hz`);
-            ctx.close();
-        } else {
-            updateElement('audio-sample-rate', 'Không hỗ trợ');
-        }
-
-        updateElement('languages', navigator.languages ? navigator.languages.join(', ') : navigator.language);
-        updateElement('cookies-enabled', navigator.cookieEnabled ? 'Có' : 'Không');
-        updateElement('local-storage', window.localStorage ? 'Khả dụng' : 'Không khả dụng');
-
-        // Dấu Vân Tay Canvas
-        async function getCanvasFingerprint() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 100;
-            const ctx = canvas.getContext('2d');
-            ctx.font = '16px Arial';
-            ctx.fillStyle = 'rgb(255,0,0)';
-            ctx.fillText('Kiểm Tra Dấu Vân Tay Siêu Nâng Cao 😎', 2, 20);
-            const gradient = ctx.createLinearGradient(0, 0, 200, 0);
-            gradient.addColorStop(0, 'blue');
-            gradient.addColorStop(1, 'green');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(20, 30, 160, 50);
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = 'yellow';
-            ctx.fillText('Shadow Test', 30, 70);
-            const data = canvas.toDataURL();
-            return (await hashString(data)).substring(0, 16) + '...';
-        }
-        getCanvasFingerprint().then(fingerprint => updateElement('canvas-fingerprint', fingerprint));
-
-        // Dấu Vân Tay Audio
-        async function getAudioFingerprint() {
-            if (!AudioContext) return 'Không hỗ trợ';
-            const ctx = new AudioContext();
-            const oscillator = ctx.createOscillator();
-            const compressor = ctx.createDynamicsCompressor();
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(1000, ctx.currentTime);
-            compressor.threshold.setValueAtTime(-50, ctx.currentTime);
-            oscillator.connect(compressor);
-            compressor.connect(ctx.destination);
-            oscillator.start();
-            oscillator.stop(ctx.currentTime + 0.1);
-            const buffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            const fingerprint = await hashString(data.join(''));
-            ctx.close();
-            return fingerprint.substring(0, 16) + '...';
-        }
-        getAudioFingerprint().then(fingerprint => updateElement('audio-fingerprint', fingerprint));
-
-        // Dấu Vân Tay WebGL
-        async function getWebGLFingerprint() {
-            if (!gl) return 'Không hỗ trợ';
-            const extensions = gl.getSupportedExtensions().join(', ');
-            const precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
-            const fingerprint = `Extensions: ${extensions.substring(0, 50)}..., Precision: ${precision.precision}`;
-            return await hashString(fingerprint);
-        }
-        getWebGLFingerprint().then(fingerprint => updateElement('webgl-fingerprint', fingerprint.substring(0, 16) + '...'));
-
-        // Dấu Vân Tay WebRTC
-        function getWebRTCFingerprint() {
-            if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) return 'Không hỗ trợ';
-            const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
-            const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-            let fingerprint = 'ICE: ';
-            pc.createDataChannel('test');
-            pc.createOffer().then(offer => {
-                pc.setLocalDescription(offer);
-                fingerprint += `SDP: ${offer.sdp.substring(0, 50)}... `;
-            });
-            pc.onicecandidate = event => {
-                if (event.candidate) {
-                    fingerprint += event.candidate.candidate.substring(0, 50) + '; ';
+            // Hàm thêm danh mục thông tin
+            function addCategory(title, data) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.innerHTML = `<h2>${title}</h2>`;
+                const table = document.createElement('table');
+                for (const [label, value] of Object.entries(data)) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<th>${label}</th><td>${value || 'Không có thông tin'}</td>`;
+                    table.appendChild(row);
                 }
+                categoryDiv.appendChild(table);
+                outputDiv.appendChild(categoryDiv);
+            }
+
+            // 1. Thông tin thiết bị và trình duyệt
+            const ua = navigator.userAgent;
+            const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+            const browserData = {
+                'Loại thiết bị': isMobile ? 'Điện thoại/Tablet' : 'Máy tính',
+                'User Agent': ua,
+                'Tên trình duyệt': navigator.appName,
+                'Phiên bản trình duyệt': navigator.appVersion,
+                'Ngôn ngữ trình duyệt': navigator.languages ? navigator.languages.join(', ') : navigator.language,
+                'Cookie bật': navigator.cookieEnabled ? 'Có' : 'Không',
+                'Nhà cung cấp': navigator.vendor,
+                'Sản phẩm': navigator.product,
+                'Do Not Track': navigator.doNotTrack || 'Không xác định',
+                'Chế độ riêng tư': window.matchMedia('(prefers-reduced-data: reduce)').matches ? 'Có' : 'Không'
             };
-            setTimeout(async () => {
-                const hash = await hashString(fingerprint);
-                updateElement('webrtc-fingerprint', hash.substring(0, 16) + '...');
-                pc.close();
-            }, 1500);
-            return 'Đang thu thập...';
-        }
-        updateElement('webrtc-fingerprint', getWebRTCFingerprint());
 
-        // Cảm Biến Thiết Bị
-        let sensorData = 'Không phát hiện';
-        if (window.DeviceOrientationEvent || window.DeviceMotionEvent || navigator.vibrate) {
-            window.addEventListener('deviceorientation', event => {
-                sensorData = `Định hướng: Alpha=${event.alpha?.toFixed(2)}, Beta=${event.beta?.toFixed(2)}, Gamma=${event.gamma?.toFixed(2)}`;
-                updateElement('device-sensors', sensorData);
-            }, { once: true });
-            window.addEventListener('devicemotion', event => {
-                sensorData = `Gia tốc: X=${event.acceleration?.x?.toFixed(2)}, Y=${event.acceleration?.y?.toFixed(2)}, Z=${event.acceleration?.z?.toFixed(2)}`;
-                updateElement('device-sensors', sensorData);
-            }, { once: true });
-            if (navigator.vibrate) {
-                navigator.vibrate(100);
-                sensorData += '; Rung: Hỗ trợ';
-                updateElement('device-sensors', sensorData);
-            }
-        }
-        updateElement('device-sensors', sensorData);
+            // 2. Hệ điều hành và nền tảng
+            const platformData = {
+                'Nền tảng': navigator.platform,
+                'Hệ điều hành': navigator.userAgentData?.platform || navigator.oscpu || 'Không có thông tin',
+                'Múi giờ': Intl.DateTimeFormat().resolvedOptions().timeZone,
+                'Định dạng ngày giờ': new Intl.DateTimeFormat().format(new Date()),
+                'Định dạng số': new Intl.NumberFormat().format(1234567.89)
+            };
 
-        // Cảm Biến Ánh Sáng
-        if (window.AmbientLightSensor) {
+            // 3. Thông tin màn hình
+            const screenData = {
+                'Độ phân giải màn hình': `${window.screen.width}x${window.screen.height}`,
+                'Kích thước khả dụng': `${window.screen.availWidth}x${window.screen.availHeight}`,
+                'Độ sâu màu': window.screen.colorDepth,
+                'Tỷ lệ pixel': window.devicePixelRatio,
+                'Chiều rộng cửa sổ': window.innerWidth,
+                'Chiều cao cửa sổ': window.innerHeight,
+                'Góc xoay màn hình': window.screen.orientation ? window.screen.orientation.angle : 'Không có thông tin',
+                'Loại màn hình': window.screen.orientation ? window.screen.orientation.type : 'Không có thông tin',
+                'Chế độ tối': window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Có' : 'Không'
+            };
+
+            // 4. Thông tin phần cứng
+            const hardwareData = {
+                'Bộ nhớ thiết bị (GB)': navigator.deviceMemory || 'Không có thông tin',
+                'Số lõi CPU': navigator.hardwareConcurrency || 'Không có thông tin',
+                'Hỗ trợ cảm ứng': ('ontouchstart' in window || navigator.maxTouchPoints > 0) 
+                    ? `Có (Tối đa ${navigator.maxTouchPoints} điểm chạm)` 
+                    : 'Không',
+                'Độ chính xác con trỏ': window.matchMedia('(pointer: fine)').matches ? 'Cao (chuột)' : 'Thấp (cảm ứng)'
+            };
+
+            // 5. Thông tin pin
+            const batteryData = {};
             try {
-                const sensor = new AmbientLightSensor();
-                sensor.onreading = () => {
-                    updateElement('light-sensor', `${sensor.illuminance} lux`);
-                    sensor.stop();
-                };
-                sensor.onerror = () => updateElement('light-sensor', 'Không thể truy cập');
-                sensor.start();
-            } catch {
-                updateElement('light-sensor', 'Không hỗ trợ');
-            }
-        } else {
-            updateElement('light-sensor', 'Không hỗ trợ');
-        }
-
-        // Hiệu Suất CPU/GPU
-        const performanceResult = (function () {
-            const start = performance.now();
-            for (let i = 0; i < 2000000; i++) Math.sin(Math.random());
-            const cpuEnd = performance.now();
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl');
-            if (gl) {
-                const startRender = performance.now();
-                gl.clearColor(0, 0, 0, 1);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-                const endRender = performance.now();
-                return `CPU: ${(cpuEnd - start).toFixed(2)} ms, GPU: ${(endRender - startRender).toFixed(2)} ms`;
-            }
-            return `CPU: ${(cpuEnd - start).toFixed(2)} ms, GPU: Không hỗ trợ`;
-        })();
-        updateElement('performance-benchmark', performanceResult);
-
-        // Danh Sách Plugin
-        const plugins = navigator.plugins ? Array.from(navigator.plugins).map(p => p.name).join(', ') : 'Không có';
-        updateElement('navigator-plugins', plugins);
-
-        // Múi Giờ
-        const timezoneOffset = new Date().getTimezoneOffset();
-        updateElement('timezone-offset', `${timezoneOffset / -60} giờ (UTC${timezoneOffset > 0 ? '-' : '+'}${Math.abs(timezoneOffset / 60)})`);
-
-        // Client Hints
-        if (navigator.userAgentData) {
-            navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile', 'architecture', 'bitness', 'brands']).then(hints => {
-                updateElement('client-hints', JSON.stringify(hints, null, 2));
-            });
-        } else {
-            updateElement('client-hints', 'Không hỗ trợ');
-        }
-
-        // Phông Chữ Mở Rộng
-        function detectFonts(fontList) {
-            const fonts = fontList || ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Comic Sans MS', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Ubuntu', 'Trebuchet MS'];
-            const testFont = 'monospace';
-            const span = document.createElement('span');
-            span.style.fontSize = '72px';
-            span.innerHTML = 'mmmmmmmmmmlli';
-            span.style.position = 'absolute';
-            span.style.left = '-9999px';
-            document.body.appendChild(span);
-            const defaultWidth = span.offsetWidth;
-            span.style.fontFamily = testFont;
-            const defaultHeight = span.offsetHeight;
-            const availableFonts = [];
-            fonts.forEach(font => {
-                span.style.fontFamily = `"${font}",${testFont}`;
-                if (span.offsetWidth !== defaultWidth || span.offsetHeight !== defaultHeight) {
-                    availableFonts.push(font);
+                if ('getBattery' in navigator) {
+                    const battery = await navigator.getBattery();
+                    batteryData['Mức pin'] = `${(battery.level * 100).toFixed(0)}%`;
+                    batteryData['Đang sạc'] = battery.charging ? 'Có' : 'Không';
+                    batteryData['Thời gian sạc đầy'] = battery.chargingTime ? `${battery.chargingTime} giây` : 'Không sạc';
+                    batteryData['Thời gian sử dụng pin'] = battery.dischargingTime ? `${battery.dischargingTime} giây` : 'Không có thông tin';
+                } else {
+                    batteryData['Thông tin pin'] = 'API Pin không được hỗ trợ';
                 }
-            });
-            document.body.removeChild(span);
-            return availableFonts;
+            } catch (e) {
+                batteryData['Lỗi pin'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 6. Thông tin mạng
+            const networkData = {};
+            try {
+                if ('connection' in navigator) {
+                    const conn = navigator.connection;
+                    networkData['Loại mạng'] = conn.type || 'Không có thông tin';
+                    networkData['Tốc độ mạng hiệu quả'] = conn.effectiveType || 'Không có thông tin';
+                    networkData['Tốc độ tải xuống (Mbps)'] = conn.downlink || 'Không có thông tin';
+                    networkData['Thời gian phản hồi (ms)'] = conn.rtt || 'Không có thông tin';
+                    networkData['Chế độ tiết kiệm dữ liệu'] = conn.saveData ? 'Bật' : 'Tắt';
+                    networkData['Công nghệ mạng'] = conn.downlinkMax ? `${conn.downlinkMax} Mbps` : 'Không có thông tin';
+                } else {
+                    networkData['Thông tin mạng'] = 'API Network Information không được hỗ trợ';
+                }
+            } catch (e) {
+                networkData['Lỗi mạng'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 7. WebGL và GPU
+            const webglData = {};
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (debugInfo) {
+                        webglData['Nhà sản xuất GPU'] = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+                        webglData['Bộ render GPU'] = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                    }
+                    webglData['Phiên bản WebGL'] = gl.getParameter(gl.VERSION);
+                    webglData['Shader Version'] = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
+                    webglData['Số lượng texture tối đa'] = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+                    webglData['Độ chính xác cao nhất'] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE).join(', ');
+                } else {
+                    webglData['WebGL'] = 'Không được hỗ trợ';
+                }
+            } catch (e) {
+                webglData['Lỗi WebGL'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 8. WebGPU (nếu hỗ trợ)
+            const webgpuData = {};
+            try {
+                if ('gpu' in navigator) {
+                    const gpu = await navigator.gpu.requestAdapter();
+                    webgpuData['Hỗ trợ WebGPU'] = gpu ? 'Có' : 'Không';
+                    webgpuData['Tên adapter'] = gpu ? gpu.name || 'Không xác định' : 'Không có thông tin';
+                } else {
+                    webgpuData['Hỗ trợ WebGPU'] = 'Không được hỗ trợ';
+                }
+            } catch (e) {
+                webgpuData['Lỗi WebGPU'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 9. Thiết bị đa phương tiện
+            const mediaData = {};
+            try {
+                if ('mediaDevices' in navigator && navigator.mediaDevices.enumerateDevices) {
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    mediaData['Số camera'] = devices.filter(device => device.kind === 'videoinput').length;
+                    mediaData['Số microphone'] = devices.filter(device => device.kind === 'audioinput').length;
+                    mediaData['Số loa'] = devices.filter(device => device.kind === 'audiooutput').length;
+                    mediaData['Camera đầu tiên'] = devices.find(device => device.kind === 'videoinput')?.label || 'Không có thông tin';
+                } else {
+                    mediaData['Thiết bị đa phương tiện'] = 'Không được hỗ trợ';
+                }
+            } catch (e) {
+                mediaData['Lỗi thiết bị đa phương tiện'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 10. Định vị
+            const geoData = {};
+            try {
+                if ('geolocation' in navigator) {
+                    geoData['Hỗ trợ định vị'] = 'Có (yêu cầu quyền truy cập)';
+                } else {
+                    geoData['Hỗ trợ định vị'] = 'Không được hỗ trợ';
+                }
+            } catch (e) {
+                geoData['Lỗi định vị'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 11. Hiệu suất
+            const perfData = {};
+            try {
+                const performance = window.performance || {};
+                const timing = performance.timing || {};
+                if (timing.navigationStart) {
+                    perfData['Thời gian tải trang (ms)'] = timing.loadEventEnd - timing.navigationStart;
+                    perfData['Thời gian xử lý DOM (ms)'] = timing.domContentLoadedEventEnd - timing.navigationStart;
+                }
+                if (performance.memory) {
+                    perfData['Bộ nhớ JS Heap (MB)'] = (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
+                    perfData['Giới hạn bộ nhớ JS (MB)'] = (performance.memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2);
+                }
+                perfData['Thời gian phản hồi mạng (ms)'] = timing.responseEnd - timing.requestStart || 'Không có thông tin';
+            } catch (e) {
+                perfData['Lỗi hiệu suất'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 12. Font enumeration (giả lập bằng canvas)
+            const fontData = {};
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.font = '12px unknown';
+                const defaultWidth = ctx.measureText('abcdefghijklmnopqrstuvwxyz0123456789').width;
+                const fonts = [
+                    'Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia',
+                    'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black',
+                    'Impact', 'Roboto', 'Open Sans', 'Lato', 'Montserrat'
+                ];
+                const detectedFonts = fonts.filter(font => {
+                    ctx.font = `12px "${font}"`;
+                    return ctx.measureText('abcdefghijklmnopqrstuvwxyz0123456789').width !== defaultWidth;
+                });
+                fontData['Font phát hiện'] = detectedFonts.length > 0 ? detectedFonts.join(', ') : 'Không phát hiện font';
+                fontData['Tổng số font thử nghiệm'] = fonts.length;
+                fontData['Số font phát hiện'] = detectedFonts.length;
+            } catch (e) {
+                fontData['Lỗi phát hiện font'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 13. Canvas Fingerprint
+            const canvasData = {};
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#f60';
+                ctx.fillRect(20, 20, 150, 100);
+                ctx.fillStyle = '#069';
+                ctx.fillText('Fingerprint Test 123', 30, 50);
+                ctx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+                ctx.beginPath();
+                ctx.arc(100, 75, 50, 0, Math.PI * 2, true);
+                ctx.stroke();
+                canvasData['Canvas Fingerprint'] = canvas.toDataURL().slice(0, 50) + '...';
+            } catch (e) {
+                canvasData['Lỗi Canvas Fingerprint'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 14. AudioContext Fingerprint
+            const audioData = {};
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    const ctx = new AudioContext();
+                    const oscillator = ctx.createOscillator();
+                    const compressor = ctx.createDynamicsCompressor();
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(1000, ctx.currentTime);
+                    compressor.threshold.setValueAtTime(-50, ctx.currentTime);
+                    oscillator.connect(compressor);
+                    compressor.connect(ctx.destination);
+                    audioData['AudioContext'] = 'Hỗ trợ';
+                    audioData['Tần số mẫu'] = ctx.sampleRate;
+                    oscillator.start();
+                    setTimeout(() => oscillator.stop(), 1); // Chỉ chạy ngắn để fingerprint
+                } else {
+                    audioData['AudioContext'] = 'Không được hỗ trợ';
+                }
+            } catch (e) {
+                audioData['Lỗi AudioContext'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 15. Cảm biến thiết bị
+            const sensorData = {};
+            try {
+                if ('AmbientLightSensor' in window) sensorData['Cảm biến ánh sáng'] = 'Có';
+                if ('Accelerometer' in window) sensorData['Cảm biến gia tốc'] = 'Có';
+                if ('Gyroscope' in window) sensorData['Cảm biến con quay'] = 'Có';
+                if ('Magnetometer' in window) sensorData['Cảm biến từ trường'] = 'Có';
+                if ('DeviceOrientationEvent' in window) sensorData['Sự kiện định hướng'] = 'Có';
+                if ('DeviceMotionEvent' in window) sensorData['Sự kiện chuyển động'] = 'Có';
+                if (Object.keys(sensorData).length === 0) sensorData['Cảm biến'] = 'Không có thông tin';
+            } catch (e) {
+                sensorData['Lỗi cảm biến'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 16. WebRTC
+            const webrtcData = {};
+            try {
+                const rtc = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+                if (rtc) {
+                    webrtcData['Hỗ trợ WebRTC'] = 'Có';
+                    const pc = new rtc({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+                    pc.createDataChannel('test');
+                    await pc.createOffer().then(offer => {
+                        webrtcData['ICE Candidates'] = offer.sdp.includes('candidate') ? 'Có' : 'Không';
+                    });
+                    pc.close();
+                } else {
+                    webrtcData['Hỗ trợ WebRTC'] = 'Không';
+                }
+            } catch (e) {
+                webrtcData['Lỗi WebRTC'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 17. Lịch sử điều hướng
+            const historyData = {};
+            try {
+                historyData['Số trang trong lịch sử'] = window.history.length;
+                historyData['Loại điều hướng'] = performance.navigation ? performance.navigation.type : 'Không có thông tin';
+            } catch (e) {
+                historyData['Lỗi lịch sử'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 18. Các tính năng trình duyệt
+            const featureData = {
+                'Hỗ trợ Service Worker': 'serviceWorker' in navigator ? 'Có' : 'Không',
+                'Hỗ trợ WebAssembly': typeof WebAssembly === 'object' ? 'Có' : 'Không',
+                'Hỗ trợ Notifications': 'Notification' in window ? 'Có' : 'Không',
+                'Hỗ trợ Clipboard API': 'clipboard' in navigator ? 'Có' : 'Không',
+                'Hỗ trợ Vibration API': 'vibrate' in navigator ? 'Có' : 'Không',
+                'Hỗ trợ Web Share API': 'share' in navigator ? 'Có' : 'Không',
+                'Hỗ trợ Credential Management': 'credentials' in navigator ? 'Có' : 'Không',
+                'Hỗ trợ Web Authentication': 'PublicKeyCredential' in window ? 'Có' : 'Không'
+            };
+
+            // Thêm tất cả danh mục vào giao diện
+            addCategory('Thông tin trình duyệt và thiết bị', browserData);
+            addCategory('Hệ điều hành và nền tảng', platformData);
+            addCategory('Thông tin màn hình', screenData);
+            addCategory('Phần cứng', hardwareData);
+            addCategory('Pin', batteryData);
+            addCategory('Mạng', networkData);
+            addCategory('WebGL và GPU', webglData);
+            addCategory('WebGPU', webgpuData);
+            addCategory('Thiết bị đa phương tiện', mediaData);
+            addCategory('Định vị', geoData);
+            addCategory('Hiệu suất', perfData);
+            addCategory('Phát hiện font', fontData);
+            addCategory('Canvas Fingerprint', canvasData);
+            addCategory('Audio Fingerprint', audioData);
+            addCategory('Cảm biến thiết bị', sensorData);
+            addCategory('WebRTC', webrtcData);
+            addCategory('Lịch sử điều hướng', historyData);
+            addCategory('Tính năng trình duyệt', featureData);
         }
-        updateElement('extended-fonts', detectFonts().join(', ') || 'Không phát hiện');
-        updateElement('fonts-detected', detectFonts(['Arial', 'Helvetica']).join(', ') || 'Không phát hiện');
 
-        // Navigator Properties
-        const navigatorProps = {
-            vendor: navigator.vendor,
-            product: navigator.product,
-            oscpu: navigator.oscpu,
-            buildID: navigator.buildID,
-            appVersion: navigator.appVersion,
-            appName: navigator.appName,
-            appCodeName: navigator.appCodeName
-        };
-        updateElement('navigator-props', JSON.stringify(navigatorProps, null, 2));
-
-        // Thông Tin Khác
-        updateElement('webrtc-enabled', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'Có' : 'Không');
-        updateElement('platform', navigator.platform || 'Không khả dụng');
-        updateElement('do-not-track', navigator.doNotTrack ? (navigator.doNotTrack === '1' ? 'Bật' : 'Tắt') : 'Không thiết lập');
-        updateElement('webdriver', navigator.webdriver ? 'Có' : 'Không');
-        updateElement('emulation-detected', (navigator.webdriver || window.navigator.webdriver || window.callPhantom || window._phantom) ? 'Có' : 'Không');
+        // Chạy hàm khi trang tải
+        window.onload = getDeviceInfo;
     </script>
 </body>
 </html>
