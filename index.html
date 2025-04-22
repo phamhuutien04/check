@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phân Tích Thiết Bị Toàn Diện</title>
+    <title>Phân Tích Thiết Bị Nghiêm Ngặt</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 20px;
-            background-color: #f0f2f5;
+            background-color: #f1f3f5;
             color: #212529;
         }
         h1 {
             text-align: center;
             color: #1e1e1e;
-            font-size: 2.2em;
+            font-size: 2.5em;
             margin-bottom: 30px;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
         }
         .category {
             margin: 20px 0;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             padding: 25px;
         }
         .category h2 {
             margin: 0 0 15px;
             color: #007bff;
-            font-size: 1.8em;
+            font-size: 1.9em;
             border-bottom: 2px solid #e9ecef;
             padding-bottom: 10px;
         }
@@ -40,7 +40,7 @@
             border-collapse: collapse;
         }
         th, td {
-            padding: 14px;
+            padding: 15px;
             text-align: left;
             border-bottom: 1px solid #dee2e6;
         }
@@ -63,6 +63,15 @@
         }
         .highlight {
             color: #28a745;
+            font-weight: bold;
+        }
+        .probability {
+            font-size: 1.2em;
+            padding: 10px;
+            background: #e7f5ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
         }
         @media (max-width: 768px) {
             th, td {
@@ -76,15 +85,18 @@
     </style>
 </head>
 <body>
-    <h1>Phân Tích Toàn Diện Thiết Bị Người Dùng</h1>
+    <h1>Phân Tích Nghiêm Ngặt Thiết Bị Người Dùng</h1>
     <div class="container" id="output">
-        <p class="loading">Đang thu thập và phân tích toàn bộ thông tin thiết bị...</p>
+        <p class="loading">Đang thực hiện kiểm tra nghiêm ngặt thiết bị...</p>
     </div>
 
     <script>
         async function getDeviceInfo() {
             const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = ''; // Xóa thông báo đang tải
+
+            let authenticityScore = 50; // Điểm xác thực ban đầu (50%)
+            const authenticityFactors = [];
 
             // Hàm thêm danh mục thông tin
             function addCategory(title, data) {
@@ -101,11 +113,17 @@
                 outputDiv.appendChild(categoryDiv);
             }
 
+            // Hàm thêm yếu tố xác thực
+            function addAuthenticityFactor(description, scoreChange) {
+                authenticityFactors.push({ description, scoreChange });
+                authenticityScore = Math.min(100, Math.max(0, authenticityScore + scoreChange));
+            }
+
             // 1. Thông tin thiết bị và trình duyệt
             const ua = navigator.userAgent;
-            const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+            const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
             const browserData = {
-                'Loại thiết bị': isMobile ? 'Điện thoại/Tablet' : 'Máy tính',
+                'Loại thiết bị (User Agent)': isMobileUA ? 'Điện thoại/Tablet' : 'Máy tính',
                 'User Agent': ua,
                 'Tên trình duyệt': navigator.appName,
                 'Phiên bản trình duyệt': navigator.appVersion,
@@ -115,9 +133,17 @@
                 'Sản phẩm': navigator.product,
                 'Do Not Track': navigator.doNotTrack || 'Không xác định',
                 'Chế độ giảm dữ liệu': window.matchMedia('(prefers-reduced-data: reduce)').matches ? 'Bật' : 'Tắt',
-                'Chế độ giảm chuyển động': window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'Bật' : 'Tắt',
-                'Chế độ tương phản cao': window.matchMedia('(prefers-contrast: high)').matches ? 'Bật' : 'Tắt'
+                'Chế độ giảm chuyển động': window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'Bật' : 'Tắt'
             };
+
+            // Kiểm tra giả mạo User Agent
+            const uaBrands = navigator.userAgentData?.brands || [];
+            const isConsistentUA = uaBrands.some(brand => ua.includes(brand.brand)) || !navigator.userAgentData;
+            if (isConsistentUA) {
+                addAuthenticityFactor('User Agent nhất quán với UserAgentData', 10);
+            } else {
+                addAuthenticityFactor('User Agent không nhất quán, có thể giả mạo', -20);
+            }
 
             // 2. Hệ điều hành và nền tảng
             const platformData = {
@@ -126,34 +152,62 @@
                 'Múi giờ': Intl.DateTimeFormat().resolvedOptions().timeZone,
                 'Định dạng ngày giờ': new Intl.DateTimeFormat().format(new Date()),
                 'Định dạng số': new Intl.NumberFormat().format(1234567.89),
-                'Định dạng tiền tệ': new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1234567.89),
-                'Phiên bản UserAgentData': navigator.userAgentData ? JSON.stringify(navigator.userAgentData.brands) : 'Không hỗ trợ'
+                'Định dạng tiền tệ': new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1234567.89)
             };
 
-            // 3. Thông tin màn hình
-            const screenData = {
-                'Độ phân giải màn hình': `${window.screen.width}x${window.screen.height}`,
-                'Kích thước khả dụng': `${window.screen.availWidth}x${window.screen.availHeight}`,
-                'Độ sâu màu': window.screen.colorDepth,
-                'Tỷ lệ pixel': window.devicePixelRatio,
-                'Chiều rộng cửa sổ': window.innerWidth,
-                'Chiều cao cửa sổ': window.innerHeight,
-                'Góc xoay màn hình': window.screen.orientation ? window.screen.orientation.angle : 'Không hỗ trợ',
-                'Loại hướng màn hình': window.screen.orientation ? window.screen.orientation.type : 'Không hỗ trợ',
-                'Chế độ tối': window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Bật' : 'Tắt',
-                'Độ phân giải CSS': window.matchMedia('(resolution: 96dpi)').matches ? '96dpi' : 'Khác'
-            };
+            // 3. Thông tin màn hình và loại màn hình
+            const screenData = {};
+            try {
+                screenData['Độ phân giải màn hình'] = `${window.screen.width}x${window.screen.height}`;
+                screenData['Kích thước khả dụng'] = `${window.screen.availWidth}x${window.screen.availHeight}`;
+                screenData['Độ sâu màu'] = window.screen.colorDepth;
+                screenData['Tỷ lệ pixel'] = window.devicePixelRatio;
+                screenData['Chiều rộng cửa sổ'] = window.innerWidth;
+                screenData['Chiều cao cửa sổ'] = window.innerHeight;
+                screenData['Góc xoay màn hình'] = window.screen.orientation ? window.screen.orientation.angle : 'Không hỗ trợ';
+                screenData['Loại hướng màn hình'] = window.screen.orientation ? window.screen.orientation.type : 'Không hỗ trợ';
+                screenData['Chế độ tối'] = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Bật' : 'Tắt';
+
+                // Suy ra loại màn hình
+                const pixelRatio = window.devicePixelRatio;
+                const resolution = window.screen.width * window.screen.height;
+                const colorDepth = window.screen.colorDepth;
+                let screenType = 'LCD';
+                if (pixelRatio >= 2 && resolution >= 1920 * 1080 && colorDepth >= 24) {
+                    screenType = 'Retina/OLED';
+                    addAuthenticityFactor('Màn hình Retina/OLED, phù hợp thiết bị di động cao cấp', 5);
+                } else if (pixelRatio >= 1.5 && resolution >= 1280 * 720) {
+                    screenType = 'LED';
+                    addAuthenticityFactor('Màn hình LED, phù hợp thiết bị trung cấp', 3);
+                }
+                if (isMobileUA && pixelRatio < 1.5) {
+                    addAuthenticityFactor('Tỷ lệ pixel thấp, không phù hợp thiết bị di động hiện đại', -15);
+                }
+                screenData['Loại màn hình (ước tính)'] = `<span class="highlight">${screenType}</span>`;
+            } catch (e) {
+                screenData['Lỗi màn hình'] = `<span class="error">${e.message}</span>`;
+            }
 
             // 4. Thông tin phần cứng
-            const hardwareData = {
-                'Bộ nhớ thiết bị (GB)': navigator.deviceMemory || 'Không hỗ trợ',
-                'Số lõi CPU': navigator.hardwareConcurrency || 'Không hỗ trợ',
-                'Hỗ trợ cảm ứng': ('ontouchstart' in window || navigator.maxTouchPoints > 0) 
+            const hardwareData = {};
+            try {
+                hardwareData['Bộ nhớ thiết bị'] = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Không hỗ trợ';
+                hardwareData['Số lõi CPU'] = navigator.hardwareConcurrency || 'Không hỗ trợ';
+                hardwareData['Hỗ trợ cảm ứng'] = ('ontouchstart' in window || navigator.maxTouchPoints > 0) 
                     ? `${navigator.maxTouchPoints} điểm chạm` 
-                    : 'Không hỗ trợ',
-                'Độ chính xác con trỏ': window.matchMedia('(pointer: fine)').matches ? 'Cao (chuột)' : 'Thấp (cảm ứng)',
-                'Hỗ trợ bàn phím ảo': 'virtualKeyboard' in navigator ? 'Có' : 'Không'
-            };
+                    : 'Không hỗ trợ';
+                hardwareData['Độ chính xác con trỏ'] = window.matchMedia('(pointer: fine)').matches ? 'Cao (chuột)' : 'Thấp (cảm ứng)';
+                hardwareData['Bàn phím ảo'] = 'virtualKeyboard' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ';
+
+                // Kiểm tra cảm ứng thật
+                if (isMobileUA && navigator.maxTouchPoints === 0) {
+                    addAuthenticityFactor('Thiếu hỗ trợ cảm ứng, có thể là giả mạo thiết bị di động', -25);
+                } else if (isMobileUA && navigator.maxTouchPoints >= 2) {
+                    addAuthenticityFactor('Hỗ trợ cảm ứng đa điểm, phù hợp thiết bị di động', 15);
+                }
+            } catch (e) {
+                hardwareData['Lỗi phần cứng'] = `<span class="error">${e.message}</span>`;
+            }
 
             // 5. Thông tin pin
             const batteryData = {};
@@ -164,8 +218,14 @@
                     batteryData['Đang sạc'] = battery.charging ? 'Bật' : 'Tắt';
                     batteryData['Thời gian sạc đầy'] = battery.chargingTime ? `${battery.chargingTime} giây` : 'Không sạc';
                     batteryData['Thời gian sử dụng pin'] = battery.dischargingTime ? `${battery.dischargingTime} giây` : 'Không hỗ trợ';
+                    if (isMobileUA && battery.level > 0) {
+                        addAuthenticityFactor('Pin khả dụng, phù hợp thiết bị di động', 10);
+                    }
                 } else {
                     batteryData['API Pin'] = 'Không hỗ trợ';
+                    if (isMobileUA) {
+                        addAuthenticityFactor('Thiếu API Pin, bất thường cho thiết bị di động', -10);
+                    }
                 }
             } catch (e) {
                 batteryData['Lỗi pin'] = `<span class="error">${e.message}</span>`;
@@ -201,8 +261,10 @@
                     webglData['Phiên bản WebGL'] = gl.getParameter(gl.VERSION);
                     webglData['Shader Version'] = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
                     webglData['Kích thước texture tối đa'] = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-                    webglData['Độ chính xác điểm'] = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE).join(', ');
                     webglData['Tiện ích mở rộng'] = gl.getSupportedExtensions().slice(0, 5).join(', ') + (gl.getSupportedExtensions().length > 5 ? '...' : '');
+                    if (isMobileUA && gl.getParameter(gl.MAX_TEXTURE_SIZE) > 8192) {
+                        addAuthenticityFactor('Texture WebGL lớn, bất thường cho thiết bị di động', -10);
+                    }
                 } else {
                     webglData['WebGL'] = 'Không hỗ trợ';
                 }
@@ -215,7 +277,7 @@
             try {
                 if ('gpu' in navigator) {
                     const gpu = await navigator.gpu.requestAdapter();
-                    webgpuData['Hỗ trợ WebGPU'] = gpu ? gpu.name || 'Có' : 'Không hỗ trợ';
+                    webgpuData['Hỗ trợ WebGPU'] = gpu ? gpu.name || 'Hỗ trợ' : 'Không hỗ trợ';
                     webgpuData['Giới hạn tài nguyên'] = gpu ? JSON.stringify(gpu.limits, null, 2).slice(0, 50) + '...' : 'Không hỗ trợ';
                 } else {
                     webgpuData['WebGPU'] = 'Không hỗ trợ';
@@ -233,9 +295,14 @@
                     mediaData['Số microphone'] = devices.filter(device => device.kind === 'audioinput').length;
                     mediaData['Số loa'] = devices.filter(device => device.kind === 'audiooutput').length;
                     mediaData['Camera đầu tiên'] = devices.find(device => device.kind === 'videoinput')?.label || 'Không hỗ trợ';
-                    mediaData['Microphone đầu tiên'] = devices.find(device => device.kind === 'audioinput')?.label || 'Không hỗ trợ';
+                    if (isMobileUA && mediaData['Số camera'] > 0) {
+                        addAuthenticityFactor('Có camera, phù hợp thiết bị di động', 5);
+                    }
                 } else {
                     mediaData['API Media Devices'] = 'Không hỗ trợ';
+                    if (isMobileUA) {
+                        addAuthenticityFactor('Thiếu API Media Devices, bất thường cho thiết bị di động', -10);
+                    }
                 }
             } catch (e) {
                 mediaData['Lỗi thiết bị đa phương tiện'] = `<span class="error">${e.message}</span>`;
@@ -244,10 +311,9 @@
             // 10. Định vị
             const geoData = {};
             try {
-                if ('geolocation' in navigator) {
-                    geoData['API Geolocation'] = 'Hỗ trợ (yêu cầu quyền)';
-                } else {
-                    geoData['API Geolocation'] = 'Không hỗ trợ';
+                geoData['API Geolocation'] = 'geolocation' in navigator ? 'Hỗ trợ (yêu cầu quyền)' : 'Không hỗ trợ';
+                if (isMobileUA && 'geolocation' in navigator) {
+                    addAuthenticityFactor('Hỗ trợ Geolocation, phù hợp thiết bị di động', 5);
                 }
             } catch (e) {
                 geoData['Lỗi định vị'] = `<span class="error">${e.message}</span>`;
@@ -283,7 +349,8 @@
                     'Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Palatino', 'Garamond',
                     'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 'Impact', 'Roboto', 'Open Sans', 'Lato',
                     'Montserrat', 'Ubuntu', 'Source Sans Pro', 'Merriweather', 'Poppins', 'Raleway', 'Noto Sans', 'Futura',
-                    'Segoe UI', 'Calibri', 'Candara', 'Optima', 'Baskerville', 'Didot', 'Franklin Gothic', 'Gill Sans'
+                    'Segoe UI', 'Calibri', 'Candara', 'Optima', 'Baskerville', 'Didot', 'Franklin Gothic', 'Gill Sans',
+                    'Consolas', 'Monaco', 'Menlo', 'Inconsolata', 'DIN Next Pro', 'Avenir', 'Proxima Nova'
                 ];
                 const detectedFonts = fonts.filter(font => {
                     ctx.font = `12px "${font}"`;
@@ -292,6 +359,9 @@
                 fontData['Font phát hiện'] = detectedFonts.length > 0 ? detectedFonts.join(', ') : 'Không phát hiện';
                 fontData['Số font thử nghiệm'] = fonts.length;
                 fontData['Số font phát hiện'] = detectedFonts.length;
+                if (isMobileUA && detectedFonts.includes('Segoe UI')) {
+                    addAuthenticityFactor('Font hệ thống máy tính (Segoe UI) phát hiện, có thể giả mạo', -15);
+                }
             } catch (e) {
                 fontData['Lỗi phát hiện font'] = `<span class="error">${e.message}</span>`;
             }
@@ -300,20 +370,23 @@
             const canvasData = {};
             try {
                 const canvas = document.createElement('canvas');
-                canvas.width = 200;
+                canvas.width = 300;
                 canvas.height = 200;
                 const ctx = canvas.getContext('2d');
-                ctx.font = '16px Arial';
-                ctx.fillStyle = '#ff6b6b';
-                ctx.fillRect(10, 10, 180, 100);
-                ctx.fillStyle = '#4ecdc4';
-                ctx.fillText('Advanced Fingerprint', 20, 50);
-                ctx.strokeStyle = '#1a535c';
-                ctx.lineWidth = 2;
+                ctx.font = '18px Arial';
+                ctx.fillStyle = 'rgba(255, 99, 71, 0.8)';
+                ctx.fillRect(10, 10, 200, 100);
+                ctx.fillStyle = '#4682b4';
+                ctx.fillText('Strict Fingerprint Test', 20, 50);
+                ctx.strokeStyle = '#32cd32';
+                ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.arc(100, 150, 40, 0, Math.PI * 2);
+                ctx.arc(150, 150, 40, 0, Math.PI * 2);
                 ctx.stroke();
-                ctx.fillStyle = 'rgba(255, 255, 0, 0.5)';
+                const gradient = ctx.createLinearGradient(0, 0, 200, 0);
+                gradient.addColorStop(0, '#ff4500');
+                gradient.addColorStop(1, '#00ced1');
+                ctx.fillStyle = gradient;
                 ctx.fillRect(50, 120, 100, 50);
                 canvasData['Canvas Fingerprint'] = canvas.toDataURL().slice(0, 50) + '...';
             } catch (e) {
@@ -329,18 +402,22 @@
                     const oscillator = ctx.createOscillator();
                     const compressor = ctx.createDynamicsCompressor();
                     const analyser = ctx.createAnalyser();
-                    oscillator.type = 'sine';
+                    oscillator.type = 'sawtooth';
                     oscillator.frequency.setValueAtTime(440, ctx.currentTime);
-                    compressor.threshold.setValueAtTime(-60, ctx.currentTime);
+                    compressor.threshold.setValueAtTime(-70, ctx.currentTime);
                     oscillator.connect(compressor);
                     compressor.connect(analyser);
                     analyser.connect(ctx.destination);
                     audioData['Tần số mẫu'] = ctx.sampleRate;
                     audioData['Kích thước FFT'] = analyser.fftSize;
                     audioData['Kênh âm thanh'] = ctx.destination.channelCount;
+                    audioData['Tần số oscillator'] = oscillator.frequency.value;
                     oscillator.start();
                     setTimeout(() => oscillator.stop(), 1);
                     ctx.close();
+                    if (isMobileUA) {
+                        addAuthenticityFactor('AudioContext hỗ trợ, phù hợp thiết bị di động', 5);
+                    }
                 } else {
                     audioData['AudioContext'] = 'Không hỗ trợ';
                 }
@@ -358,6 +435,12 @@
                 sensorData['Cảm biến áp suất'] = 'Barometer' in window ? 'Hỗ trợ' : 'Không hỗ trợ';
                 sensorData['Sự kiện định hướng'] = 'DeviceOrientationEvent' in window ? 'Hỗ trợ' : 'Không hỗ trợ';
                 sensorData['Sự kiện chuyển động'] = 'DeviceMotionEvent' in window ? 'Hỗ trợ' : 'Không hỗ trợ';
+                const hasMobileSensors = 'Accelerometer' in window || 'Gyroscope' in window || 'DeviceMotionEvent' in window;
+                if (isMobileUA && hasMobileSensors) {
+                    addAuthenticityFactor('Cảm biến di động hỗ trợ, xác nhận thiết bị di động thật', 20);
+                } else if (isMobileUA && !hasMobileSensors) {
+                    addAuthenticityFactor('Thiếu cảm biến di động, có thể giả mạo thiết bị di động', -30);
+                }
             } catch (e) {
                 sensorData['Lỗi cảm biến'] = `<span class="error">${e.message}</span>`;
             }
@@ -373,6 +456,9 @@
                     webrtcData['ICE Candidates'] = offer.sdp.includes('candidate') ? offer.sdp.split('\n').filter(line => line.includes('candidate')).join('; ') : 'Không hỗ trợ';
                     webrtcData['SDP Offer'] = offer.sdp.slice(0, 50) + '...';
                     pc.close();
+                    if (isMobileUA) {
+                        addAuthenticityFactor('WebRTC hỗ trợ, phù hợp thiết bị di động', 5);
+                    }
                 } else {
                     webrtcData['WebRTC'] = 'Không hỗ trợ';
                 }
@@ -397,17 +483,33 @@
                 document.addEventListener('keydown', () => keyEvents++, { once: true });
                 document.addEventListener('mousemove', () => mouseEvents++, { once: true });
                 document.addEventListener('touchstart', () => touchEvents++, { once: true });
-                setTimeout(() => {
-                    behaviorData['Sự kiện bàn phím'] = keyEvents;
-                    behaviorData['Sự kiện chuột'] = mouseEvents;
-                    behaviorData['Sự kiện cảm ứng'] = touchEvents;
-                }, 1000);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Chờ 1 giây
+                behaviorData['Sự kiện bàn phím'] = keyEvents;
+                behaviorData['Sự kiện chuột'] = mouseEvents;
+                behaviorData['Sự kiện cảm ứng'] = touchEvents;
                 behaviorData['Thời gian tải trang'] = performance.now().toFixed(2) + ' ms';
+                if (isMobileUA && touchEvents > 0 && mouseEvents === 0) {
+                    addAuthenticityFactor('Hành vi cảm ứng thuần, xác nhận thiết bị di động', 15);
+                } else if (isMobileUA && mouseEvents > 0 && touchEvents === 0) {
+                    addAuthenticityFactor('Hành vi chuột trên thiết bị di động, có thể giả mạo', -20);
+                }
             } catch (e) {
                 behaviorData['Lỗi hành vi'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 19. Tính năng trình duyệt
+            // 19. Phát hiện giả mạo (DevTools, kích thước cửa sổ)
+            const spoofData = {};
+            try {
+                spoofData['DevTools mở'] = window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100 ? 'Có thể' : 'Không';
+                spoofData['Kích thước cửa sổ bất thường'] = window.innerWidth > window.screen.width || window.innerHeight > window.screen.height ? 'Có' : 'Không';
+                if (spoofData['DevTools mở'] === 'Có thể' || spoofData['Kích thước cửa sổ bất thường'] === 'Có') {
+                    addAuthenticityFactor('Phát hiện dấu hiệu DevTools hoặc giả mạo cửa sổ', -30);
+                }
+            } catch (e) {
+                spoofData['Lỗi phát hiện giả mạo'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 20. Tính năng trình duyệt
             const featureData = {
                 'Service Worker': 'serviceWorker' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'WebAssembly': typeof WebAssembly === 'object' ? 'Hỗ trợ' : 'Không hỗ trợ',
@@ -415,28 +517,36 @@
                 'Clipboard API': 'clipboard' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'Vibration API': 'vibrate' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'Web Share API': 'share' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'Credential Management': 'credentials' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'Web Authentication': 'PublicKeyCredential' in window ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'WebXR': 'xr' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'WebCrypto': 'crypto' in window ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'Gamepad API': 'getGamepads' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'WebTransport': 'WebTransport' in window ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'Web Neural Network': 'ml' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
-                'Storage API': 'storage' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ'
+                'Gamepad API': 'getGamepads' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ'
             };
+            if (isMobileUA && featureData['Vibration API'] === 'Hỗ trợ') {
+                addAuthenticityFactor('Vibration API hỗ trợ, phù hợp thiết bị di động', 5);
+            }
 
-            // 20. CSS Media Queries
+            // 21. CSS Media Queries
             const cssData = {};
             try {
                 cssData['Mức zoom'] = window.matchMedia('(min-device-pixel-ratio: 2)').matches ? 'Cao' : 'Bình thường';
                 cssData['Chế độ in'] = window.matchMedia('print').matches ? 'Bật' : 'Tắt';
                 cssData['Màn hình cảm ứng'] = window.matchMedia('(hover: none)').matches ? 'Có' : 'Không';
                 cssData['Độ sáng màn hình'] = window.matchMedia('(light-level: dim)').matches ? 'Tối' : 'Sáng';
+                if (isMobileUA && cssData['Màn hình cảm ứng'] === 'Có') {
+                    addAuthenticityFactor('CSS xác nhận màn hình cảm ứng, phù hợp thiết bị di động', 10);
+                }
             } catch (e) {
                 cssData['Lỗi CSS'] = `<span class="error">${e.message}</span>`;
             }
 
-            // Thêm tất cả danh mục vào giao diện
+            // Hiển thị xác suất thiết bị thật
+            const probabilityDiv = document.createElement('div');
+            probabilityDiv.className = 'probability';
+            probabilityDiv.innerHTML = `Xác suất thiết bị thật: <span class="highlight">${authenticityScore.toFixed(0)}%</span><br>` +
+                `Yếu tố xác thực:<ul>` + authenticityFactors.map(f => `<li>${f.description}: ${f.scoreChange > 0 ? '+' : ''}${f.scoreChange}%</li>`).join('') + `</ul>`;
+            outputDiv.appendChild(probabilityDiv);
+
+            // Thêm tất cả danh mục
             await Promise.all([
                 addCategory('Thông tin trình duyệt và thiết bị', browserData),
                 addCategory('Hệ điều hành và nền tảng', platformData),
@@ -456,6 +566,7 @@
                 addCategory('WebRTC', webrtcData),
                 addCategory('Lịch sử điều hướng', historyData),
                 addCategory('Hành vi người dùng', behaviorData),
+                addCategory('Phát hiện giả mạo', spoofData),
                 addCategory('Tính năng trình duyệt', featureData),
                 addCategory('CSS Media Queries', cssData)
             ]);
