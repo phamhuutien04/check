@@ -1,36 +1,374 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Kiểm tra trình duyệt</title>
-    <script>
-        function kiemTraTrinhDuyet() {
-            var userAgent = navigator.userAgent;
+import Link from "next/link"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { BookOpen, Bookmark, Clock, Search, TrendingUp } from "lucide-react"
 
-            var trinhDuyet = "Không xác định";
+export default function Home() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between py-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/placeholder.svg?height=40&width=40"
+              alt="Logo Truyện Cổ Tích"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <span className="text-xl font-bold text-primary">Truyện Cổ Tích Việt Nam</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
+              Trang Chủ
+            </Link>
+            <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              Danh Mục
+            </Link>
+            <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              Truyện Mới
+            </Link>
+            <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              Yêu Thích
+            </Link>
+            <Link href="#" className="text-sm font-medium transition-colors hover:text-primary">
+              Giới Thiệu
+            </Link>
+          </nav>
+          <div className="flex items-center gap-4">
+            <form className="hidden md:flex relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Tìm kiếm truyện..."
+                className="rounded-full bg-background pl-8 pr-4 py-2 text-sm ring-1 ring-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              />
+            </form>
+            <Button variant="outline" size="icon" className="rounded-full md:hidden">
+              <Search className="h-4 w-4" />
+              <span className="sr-only">Tìm kiếm</span>
+            </Button>
+            <Button className="rounded-full">Đăng Nhập</Button>
+          </div>
+        </div>
+      </header>
 
-            if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Edg") === -1 && userAgent.indexOf("OPR") === -1) {
-                trinhDuyet = "Google Chrome";
-            } else if (userAgent.indexOf("Firefox") > -1) {
-                trinhDuyet = "Mozilla Firefox";
-            } else if (userAgent.indexOf("Edg") > -1) {
-                trinhDuyet = "Microsoft Edge";
-            } else if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") === -1) {
-                trinhDuyet = "Safari";
-            } else if (userAgent.indexOf("OPR") > -1 || userAgent.indexOf("Opera") > -1) {
-                trinhDuyet = "Opera";
-            } else if (userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident/") > -1) {
-                trinhDuyet = "Internet Explorer";
-            }
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5 z-10" />
+          <div className="relative h-[500px] w-full">
+            <Image
+              src="/placeholder.svg?height=500&width=1920"
+              alt="Truyện cổ tích Việt Nam"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center z-20">
+            <div className="container">
+              <div className="max-w-xl space-y-5">
+                <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+                  Khám Phá Kho Tàng Truyện Cổ Tích Việt Nam
+                </h1>
+                <p className="text-lg text-white/90">
+                  Đắm chìm trong thế giới diệu kỳ của những câu chuyện dân gian và cổ tích Việt Nam đầy màu sắc và ý
+                  nghĩa.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button size="lg" className="rounded-full">
+                    Đọc Ngay
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full bg-white/20 text-white hover:bg-white/30 hover:text-white"
+                  >
+                    Khám Phá Thêm
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            document.getElementById("trinhduyet").innerText = "Bạn đang sử dụng: " + trinhDuyet;
-        }
+        {/* Featured Stories */}
+        <section className="container py-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold tracking-tight">Truyện Nổi Bật</h2>
+            <Link href="#" className="text-primary hover:underline">
+              Xem tất cả
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredStories.map((story) => (
+              <Card key={story.id} className="overflow-hidden transition-all hover:shadow-lg">
+                <div className="aspect-[16/9] relative">
+                  <Image
+                    src={story.image || "/placeholder.svg"}
+                    alt={story.title}
+                    fill
+                    className="object-cover transition-transform hover:scale-105"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle>{story.title}</CardTitle>
+                  <CardDescription>{story.description}</CardDescription>
+                </CardHeader>
+                <CardFooter className="flex justify-between">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="mr-1 h-4 w-4" />
+                    {story.readTime} phút đọc
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Đọc Ngay
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-        window.onload = kiemTraTrinhDuyet;
-    </script>
-</head>
-<body>
-    <h2>Kiểm tra trình duyệt</h2>
-    <p id="trinhduyet">Đang kiểm tra...</p>
-</body>
-</html>
+        {/* Categories */}
+        <section className="bg-muted py-12">
+          <div className="container">
+            <h2 className="text-3xl font-bold tracking-tight mb-6">Danh Mục Truyện</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href="#"
+                  className="group relative overflow-hidden rounded-lg h-40 flex items-center justify-center p-6 transition-all hover:shadow-lg"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-primary/40 opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative z-10 text-xl font-medium text-white text-center">{category.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Popular Stories */}
+        <section className="container py-12">
+          <div className="flex items-center gap-2 mb-6">
+            <TrendingUp className="h-6 w-6 text-primary" />
+            <h2 className="text-3xl font-bold tracking-tight">Truyện Được Yêu Thích</h2>
+          </div>
+          <div className="grid gap-6">
+            {popularStories.map((story) => (
+              <div
+                key={story.id}
+                className="flex flex-col md:flex-row gap-4 border rounded-lg p-4 hover:shadow-md transition-all"
+              >
+                <div className="relative w-full md:w-48 h-32 flex-shrink-0">
+                  <Image
+                    src={story.image || "/placeholder.svg"}
+                    alt={story.title}
+                    fill
+                    className="object-cover rounded-md"
+                  />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-xl font-bold">{story.title}</h3>
+                  <p className="text-muted-foreground line-clamp-2">{story.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <span className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="mr-1 h-4 w-4" />
+                        {story.readTime} phút đọc
+                      </span>
+                      <span className="flex items-center text-sm text-muted-foreground">
+                        <Bookmark className="mr-1 h-4 w-4" />
+                        {story.bookmarks} lượt lưu
+                      </span>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Đọc Ngay
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Newsletter */}
+        <section className="bg-primary text-primary-foreground py-12">
+          <div className="container">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-3 max-w-md">
+                <h2 className="text-2xl font-bold">Đăng Ký Nhận Truyện Mới</h2>
+                <p>Nhận thông báo khi có truyện cổ tích mới được cập nhật. Chúng tôi sẽ không gửi spam!</p>
+              </div>
+              <div className="w-full md:w-auto flex-1 max-w-sm">
+                <form className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="Email của bạn"
+                    className="flex-1 rounded-md px-4 py-2 bg-primary-foreground text-primary border-primary-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-foreground"
+                    required
+                  />
+                  <Button variant="secondary">Đăng Ký</Button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t bg-background">
+        <div className="container py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/placeholder.svg?height=40&width=40"
+                  alt="Logo Truyện Cổ Tích"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+                <span className="text-xl font-bold">Truyện Cổ Tích</span>
+              </div>
+              <p className="text-muted-foreground">
+                Kho tàng truyện cổ tích Việt Nam - Nơi lưu giữ và phát huy những giá trị văn hóa dân gian quý báu.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium mb-3">Danh Mục</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Truyện Thần Thoại
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Truyện Cổ Tích
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Truyện Ngụ Ngôn
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Truyện Dân Gian
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-medium mb-3">Liên Kết</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Trang Chủ
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Giới Thiệu
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Điều Khoản Sử Dụng
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="text-muted-foreground hover:text-foreground">
+                    Chính Sách Bảo Mật
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-medium mb-3">Liên Hệ</h3>
+              <ul className="space-y-2">
+                <li className="text-muted-foreground">Email: info@truyencotich.vn</li>
+                <li className="text-muted-foreground">Điện thoại: (84) 123 456 789</li>
+                <li className="text-muted-foreground">Địa chỉ: Hà Nội, Việt Nam</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t mt-8 pt-6 text-center text-muted-foreground">
+            <p>© {new Date().getFullYear()} Truyện Cổ Tích Việt Nam. Tất cả các quyền được bảo lưu.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+// Sample data
+const featuredStories = [
+  {
+    id: 1,
+    title: "Tấm Cám",
+    description: "Câu chuyện về cô gái hiền lành Tấm và người em gái độc ác Cám",
+    image: "/placeholder.svg?height=200&width=400",
+    readTime: 10,
+  },
+  {
+    id: 2,
+    title: "Sơn Tinh Thủy Tinh",
+    description: "Cuộc chiến giữa thần núi và thần nước để giành công chúa Mỵ Nương",
+    image: "/placeholder.svg?height=200&width=400",
+    readTime: 12,
+  },
+  {
+    id: 3,
+    title: "Thạch Sanh",
+    description: "Chàng trai nghèo với tấm lòng nhân hậu đã trở thành anh hùng",
+    image: "/placeholder.svg?height=200&width=400",
+    readTime: 15,
+  },
+]
+
+const categories = [
+  { id: 1, name: "Truyện Thần Thoại" },
+  { id: 2, name: "Truyện Cổ Tích" },
+  { id: 3, name: "Truyện Ngụ Ngôn" },
+  { id: 4, name: "Truyện Dân Gian" },
+  { id: 5, name: "Truyện Lịch Sử" },
+  { id: 6, name: "Truyện Cười Dân Gian" },
+  { id: 7, name: "Truyện Về Các Vị Thần" },
+  { id: 8, name: "Truyện Về Động Vật" },
+]
+
+const popularStories = [
+  {
+    id: 1,
+    title: "Cây Tre Trăm Đốt",
+    description:
+      "Câu chuyện về sự thông minh và lòng hiếu thảo của chàng trai nghèo, người đã dùng trí tuệ để vượt qua thử thách và báo hiếu cho cha mẹ.",
+    image: "/placeholder.svg?height=150&width=300",
+    readTime: 8,
+    bookmarks: 1245,
+  },
+  {
+    id: 2,
+    title: "Sự Tích Hồ Gươm",
+    description: "Câu chuyện về thanh gươm thần và rùa vàng, giải thích nguồn gốc của Hồ Hoàn Kiếm nổi tiếng ở Hà Nội.",
+    image: "/placeholder.svg?height=150&width=300",
+    readTime: 7,
+    bookmarks: 987,
+  },
+  {
+    id: 3,
+    title: "Chử Đồng Tử",
+    description:
+      "Câu chuyện tình yêu giữa chàng trai nghèo Chử Đồng Tử và công chúa Tiên Dung, một trong tứ bất tử trong tín ngưỡng dân gian Việt Nam.",
+    image: "/placeholder.svg?height=150&width=300",
+    readTime: 10,
+    bookmarks: 856,
+  },
+]
