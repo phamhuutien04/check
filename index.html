@@ -236,7 +236,7 @@
     .hero {
       position: relative;
       height: 600px;
-      background-image: url('https://source.unsplash.com/random/1920x1080/?vietnam,landscape');
+      background-image: url('https://images.unsplash.com/photo-1528127269322-539801943592?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-position: center;
       color: var(--light);
@@ -346,6 +346,7 @@
     .story-image {
       height: 200px;
       overflow: hidden;
+      position: relative;
     }
 
     .story-image img {
@@ -357,6 +358,19 @@
 
     .story-card:hover .story-image img {
       transform: scale(1.1);
+    }
+
+    .story-category {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--primary);
+      color: var(--light);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 1;
     }
 
     .story-content {
@@ -512,12 +526,27 @@
       width: 200px;
       height: 150px;
       flex-shrink: 0;
+      position: relative;
     }
 
     .popular-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .popular-rating {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: var(--secondary);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .popular-content {
@@ -568,6 +597,51 @@
 
     .meta-item i {
       margin-right: 5px;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background-color: var(--accent-light);
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .quote-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .quote-mark {
+      font-size: 6rem;
+      color: var(--primary);
+      opacity: 0.2;
+      position: absolute;
+      line-height: 1;
+    }
+
+    .quote-mark-left {
+      top: -30px;
+      left: -20px;
+    }
+
+    .quote-mark-right {
+      bottom: -50px;
+      right: -20px;
+    }
+
+    .quote-text {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--dark);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-author {
+      font-weight: 600;
+      color: var(--primary);
     }
 
     /* Newsletter */
@@ -853,7 +927,7 @@
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <img src="https://via.placeholder.com/50/c8102e/ffffff?text=VN" alt="Logo Truyện Cổ Tích">
+          <img src="https://i.ibb.co/Jt8MZY5/vietnamese-logo.png" alt="Logo Truyện Cổ Tích">
           <span class="logo-text">Truyện Cổ Tích Việt Nam</span>
         </div>
         
@@ -903,7 +977,8 @@
         <!-- Story Card 1 -->
         <div class="story-card fade-in">
           <div class="story-image">
-            <img src="https://source.unsplash.com/random/600x400/?vietnam,folk" alt="Tấm Cám">
+            <span class="story-category">Cổ Tích</span>
+            <img src="https://i.ibb.co/Jj1tHVk/tam-cam.jpg" alt="Tấm Cám">
           </div>
           <div class="story-content">
             <h3 class="story-title">Tấm Cám</h3>
@@ -920,7 +995,8 @@
         <!-- Story Card 2 -->
         <div class="story-card fade-in delay-1">
           <div class="story-image">
-            <img src="https://source.unsplash.com/random/600x400/?vietnam,mountain" alt="Sơn Tinh Thủy Tinh">
+            <span class="story-category">Thần Thoại</span>
+            <img src="https://i.ibb.co/Qf7Nw0p/son-tinh-thuy-tinh.jpg" alt="Sơn Tinh Thủy Tinh">
           </div>
           <div class="story-content">
             <h3 class="story-title">Sơn Tinh Thủy Tinh</h3>
@@ -937,7 +1013,8 @@
         <!-- Story Card 3 -->
         <div class="story-card fade-in delay-2">
           <div class="story-image">
-            <img src="https://source.unsplash.com/random/600x400/?vietnam,hero" alt="Thạch Sanh">
+            <span class="story-category">Cổ Tích</span>
+            <img src="https://i.ibb.co/Jk9X0Lz/thach-sanh.jpg" alt="Thạch Sanh">
           </div>
           <div class="story-content">
             <h3 class="story-title">Thạch Sanh</h3>
@@ -945,6 +1022,60 @@
             <div class="story-footer">
               <div class="story-meta">
                 <i class="far fa-clock"></i> 15 phút đọc
+              </div>
+              <a href="#" class="btn story-button">Đọc Ngay</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Story Card 4 -->
+        <div class="story-card fade-in delay-3">
+          <div class="story-image">
+            <span class="story-category">Dân Gian</span>
+            <img src="https://i.ibb.co/Qj8MVNL/su-tich-dua-hau.jpg" alt="Sự Tích Quả Dưa Hấu">
+          </div>
+          <div class="story-content">
+            <h3 class="story-title">Sự Tích Quả Dưa Hấu</h3>
+            <p class="story-description">Câu chuyện cảm động về tình cha con và sự hiếu thảo, giải thích nguồn gốc của quả dưa hấu trong văn hóa Việt Nam.</p>
+            <div class="story-footer">
+              <div class="story-meta">
+                <i class="far fa-clock"></i> 8 phút đọc
+              </div>
+              <a href="#" class="btn story-button">Đọc Ngay</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Story Card 5 -->
+        <div class="story-card fade-in delay-1">
+          <div class="story-image">
+            <span class="story-category">Cổ Tích</span>
+            <img src="https://i.ibb.co/Lk4L2Lz/cay-khe.jpg" alt="Cây Khế">
+          </div>
+          <div class="story-content">
+            <h3 class="story-title">Cây Khế</h3>
+            <p class="story-description">Câu chuyện về người anh tham lam và người em hiền lành, dạy về lòng tốt và sự công bằng trong cuộc sống.</p>
+            <div class="story-footer">
+              <div class="story-meta">
+                <i class="far fa-clock"></i> 9 phút đọc
+              </div>
+              <a href="#" class="btn story-button">Đọc Ngay</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Story Card 6 -->
+        <div class="story-card fade-in delay-2">
+          <div class="story-image">
+            <span class="story-category">Thần Thoại</span>
+            <img src="https://i.ibb.co/Jj1tHVk/au-co-lac-long-quan.jpg" alt="Âu Cơ Lạc Long Quân">
+          </div>
+          <div class="story-content">
+            <h3 class="story-title">Âu Cơ Lạc Long Quân</h3>
+            <p class="story-description">Truyền thuyết về nguồn gốc dân tộc Việt Nam, kể về Lạc Long Quân và Âu Cơ - tổ tiên của người Việt.</p>
+            <div class="story-footer">
+              <div class="story-meta">
+                <i class="far fa-clock"></i> 14 phút đọc
               </div>
               <a href="#" class="btn story-button">Đọc Ngay</a>
             </div>
@@ -962,49 +1093,49 @@
       <div class="categories-grid">
         <!-- Category 1 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,mythology" alt="Truyện Thần Thoại">
+          <img src="https://i.ibb.co/Qf7Nw0p/than-thoai.jpg" alt="Truyện Thần Thoại">
           <span class="category-name">Truyện Thần Thoại</span>
         </a>
         
         <!-- Category 2 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,fairytale" alt="Truyện Cổ Tích">
+          <img src="https://i.ibb.co/Jj1tHVk/co-tich.jpg" alt="Truyện Cổ Tích">
           <span class="category-name">Truyện Cổ Tích</span>
         </a>
         
         <!-- Category 3 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,fable" alt="Truyện Ngụ Ngôn">
+          <img src="https://i.ibb.co/Lk4L2Lz/ngu-ngon.jpg" alt="Truyện Ngụ Ngôn">
           <span class="category-name">Truyện Ngụ Ngôn</span>
         </a>
         
         <!-- Category 4 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,folklore" alt="Truyện Dân Gian">
+          <img src="https://i.ibb.co/Qj8MVNL/dan-gian.jpg" alt="Truyện Dân Gian">
           <span class="category-name">Truyện Dân Gian</span>
         </a>
         
         <!-- Category 5 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,history" alt="Truyện Lịch Sử">
+          <img src="https://i.ibb.co/Jk9X0Lz/lich-su.jpg" alt="Truyện Lịch Sử">
           <span class="category-name">Truyện Lịch Sử</span>
         </a>
         
         <!-- Category 6 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,comedy" alt="Truyện Cười Dân Gian">
+          <img src="https://i.ibb.co/Qj8MVNL/truyen-cuoi.jpg" alt="Truyện Cười Dân Gian">
           <span class="category-name">Truyện Cười Dân Gian</span>
         </a>
         
         <!-- Category 7 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,gods" alt="Truyện Về Các Vị Thần">
+          <img src="https://i.ibb.co/Qf7Nw0p/cac-vi-than.jpg" alt="Truyện Về Các Vị Thần">
           <span class="category-name">Truyện Về Các Vị Thần</span>
         </a>
         
         <!-- Category 8 -->
         <a href="#" class="category-card">
-          <img src="https://source.unsplash.com/random/400x300/?vietnam,animals" alt="Truyện Về Động Vật">
+          <img src="https://i.ibb.co/Lk4L2Lz/dong-vat.jpg" alt="Truyện Về Động Vật">
           <span class="category-name">Truyện Về Động Vật</span>
         </a>
       </div>
@@ -1023,7 +1154,10 @@
         <!-- Popular Item 1 -->
         <div class="popular-item fade-in">
           <div class="popular-image">
-            <img src="https://source.unsplash.com/random/400x300/?vietnam,bamboo" alt="Cây Tre Trăm Đốt">
+            <img src="https://i.ibb.co/Lk4L2Lz/cay-tre-tram-dot.jpg" alt="Cây Tre Trăm Đốt">
+            <div class="popular-rating">
+              <i class="fas fa-star"></i> 4.8
+            </div>
           </div>
           <div class="popular-content">
             <h3 class="popular-title">Cây Tre Trăm Đốt</h3>
@@ -1045,7 +1179,10 @@
         <!-- Popular Item 2 -->
         <div class="popular-item fade-in delay-1">
           <div class="popular-image">
-            <img src="https://source.unsplash.com/random/400x300/?vietnam,lake" alt="Sự Tích Hồ Gươm">
+            <img src="https://i.ibb.co/Qf7Nw0p/su-tich-ho-guom.jpg" alt="Sự Tích Hồ Gươm">
+            <div class="popular-rating">
+              <i class="fas fa-star"></i> 4.7
+            </div>
           </div>
           <div class="popular-content">
             <h3 class="popular-title">Sự Tích Hồ Gươm</h3>
@@ -1067,7 +1204,10 @@
         <!-- Popular Item 3 -->
         <div class="popular-item fade-in delay-2">
           <div class="popular-image">
-            <img src="https://source.unsplash.com/random/400x300/?vietnam,love" alt="Chử Đồng Tử">
+            <img src="https://i.ibb.co/Jj1tHVk/chu-dong-tu.jpg" alt="Chử Đồng Tử">
+            <div class="popular-rating">
+              <i class="fas fa-star"></i> 4.9
+            </div>
           </div>
           <div class="popular-content">
             <h3 class="popular-title">Chử Đồng Tử</h3>
@@ -1085,6 +1225,43 @@
             </div>
           </div>
         </div>
+        
+        <!-- Popular Item 4 -->
+        <div class="popular-item fade-in delay-3">
+          <div class="popular-image">
+            <img src="https://i.ibb.co/Jk9X0Lz/banh-chung-banh-day.jpg" alt="Sự Tích Bánh Chưng Bánh Dày">
+            <div class="popular-rating">
+              <i class="fas fa-star"></i> 4.6
+            </div>
+          </div>
+          <div class="popular-content">
+            <h3 class="popular-title">Sự Tích Bánh Chưng Bánh Dày</h3>
+            <p class="popular-description">Câu chuyện về Lang Liêu, người đã sáng tạo ra bánh chưng và bánh dày để dâng lên vua Hùng, trở thành món ăn truyền thống của Tết Việt Nam.</p>
+            <div class="popular-footer">
+              <div class="popular-meta">
+                <div class="meta-item">
+                  <i class="far fa-clock"></i> 9 phút đọc
+                </div>
+                <div class="meta-item">
+                  <i class="far fa-bookmark"></i> 782 lượt lưu
+                </div>
+              </div>
+              <a href="#" class="btn btn-outline story-button">Đọc Ngay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Quote Section -->
+  <section class="quote-section">
+    <div class="container">
+      <div class="quote-container">
+        <div class="quote-mark quote-mark-left">"</div>
+        <p class="quote-text">Truyện cổ tích là kho tàng văn hóa dân gian quý báu, là cầu nối giữa quá khứ và hiện tại, giúp chúng ta hiểu hơn về nguồn cội, bản sắc và giá trị truyền thống của dân tộc Việt Nam.</p>
+        <p class="quote-author">- GS. Nguyễn Đổng Chi</p>
+        <div class="quote-mark quote-mark-right">"</div>
       </div>
     </div>
   </section>
@@ -1109,7 +1286,7 @@
       <div class="footer-grid">
         <div>
           <div class="footer-logo">
-            <img src="https://via.placeholder.com/40/c8102e/ffffff?text=VN" alt="Logo Truyện Cổ Tích">
+            <img src="https://i.ibb.co/Jt8MZY5/vietnamese-logo.png" alt="Logo Truyện Cổ Tích">
             <span class="logo-text">Truyện Cổ Tích</span>
           </div>
           <p class="footer-about">Kho tàng truyện cổ tích Việt Nam - Nơi lưu giữ và phát huy những giá trị văn hóa dân gian quý báu.</p>
