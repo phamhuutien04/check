@@ -119,11 +119,45 @@
                 authenticityScore = Math.min(100, Math.max(0, authenticityScore + scoreChange));
             }
 
+            // Hàm xác định thiết bị cụ thể từ User Agent
+            function detectDevice(ua) {
+                let deviceType = 'Không xác định';
+                let deviceModel = 'Không xác định';
+
+                if (/iPhone/i.test(ua)) {
+                    deviceType = 'iPhone';
+                    const match = ua.match(/iPhone OS (\d+_\d+)/);
+                    deviceModel = match ? `iPhone (iOS ${match[1].replace('_', '.')})` : 'iPhone';
+                } else if (/iPad/i.test(ua)) {
+                    deviceType = 'iPad';
+                    const match = ua.match(/CPU OS (\d+_\d+)/);
+                    deviceModel = match ? `iPad (iOS ${match[1].replace('_', '.')})` : 'iPad';
+                } else if (/Android/i.test(ua)) {
+                    deviceType = 'Android';
+                    const match = ua.match(/Android \d+\.\d+.*?(?:; ([^;)]+))/);
+                    deviceModel = match && match[1] ? `Android (${match[1]})` : 'Android';
+                } else if (/Windows/i.test(ua)) {
+                    deviceType = 'PC (Windows)';
+                    deviceModel = 'PC';
+                } else if (/Macintosh/i.test(ua)) {
+                    deviceType = 'Mac';
+                    deviceModel = 'Mac';
+                } else if (/Linux/i.test(ua) && !/Android/i.test(ua)) {
+                    deviceType = 'PC (Linux)';
+                    deviceModel = 'PC';
+                }
+
+                return { deviceType, deviceModel };
+            }
+
             // 1. Thông tin thiết bị và trình duyệt
             const ua = navigator.userAgent;
             const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+            const { deviceType, deviceModel } = detectDevice(ua);
             const browserData = {
                 'Loại thiết bị (User Agent)': isMobileUA ? 'Điện thoại/Tablet' : 'Máy tính',
+                'Thiết bị cụ thể': deviceType,
+                'Mô hình thiết bị': deviceModel,
                 'User Agent': ua,
                 'Tên trình duyệt': navigator.appName,
                 'Phiên bản trình duyệt': navigator.appVersion,
@@ -145,7 +179,30 @@
                 addAuthenticityFactor('User Agent không nhất quán, có thể giả mạo', -20);
             }
 
-            // 2. Hệ điều hành và nền tảng
+            // 2. Thông tin LocalStorage (m_shareearn_finger, share_uuid)
+            const localStorageData = {};
+            try {
+                const m_shareearn_finger = localStorage.getItem('m_shareearn_finger');
+                const share_uuid = localStorage.getItem('share_uuid');
+                localStorageData['m_shareearn_finger'] = m_shareearn_finger || 'Không tồn tại';
+                localStorageData['share_uuid'] = share_uuid || 'Không tồn tại';
+
+                if (m_shareearn_finger && m_shareearn_finger !== 'null') {
+                    addAuthenticityFactor('Tồn tại m_shareearn_finger, phù hợp với thiết bị hợp lệ', 10);
+                } else {
+                    addAuthenticityFactor('Thiếu m_shareearn_finger, có thể là thiết bị mới hoặc giả mạo', -10);
+                }
+
+                if (share_uuid && share_uuid !== 'null') {
+                    addAuthenticityFactor('Tồn tại share_uuid, phù hợp với thiết bị hợp lệ', 10);
+                } else {
+                    addAuthenticityFactor('Thiếu share_uuid, có thể là thiết bị mới hoặc giả mạo', -10);
+                }
+            } catch (e) {
+                localStorageData['Lỗi LocalStorage'] = `<span class="error">${e.message}</span>`;
+            }
+
+            // 3. Hệ điều hành và nền tảng
             const platformData = {
                 'Nền tảng': navigator.platform,
                 'Hệ điều hành': navigator.userAgentData?.platform || navigator.oscpu || 'Không hỗ trợ',
@@ -155,7 +212,7 @@
                 'Định dạng tiền tệ': new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1234567.89)
             };
 
-            // 3. Thông tin màn hình và loại màn hình
+            // 4. Thông tin màn hình và loại màn hình
             const screenData = {};
             try {
                 screenData['Độ phân giải màn hình'] = `${window.screen.width}x${window.screen.height}`;
@@ -188,7 +245,7 @@
                 screenData['Lỗi màn hình'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 4. Thông tin phần cứng
+            // 5. Thông tin phần cứng
             const hardwareData = {};
             try {
                 hardwareData['Bộ nhớ thiết bị'] = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Không hỗ trợ';
@@ -209,7 +266,7 @@
                 hardwareData['Lỗi phần cứng'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 5. Thông tin pin
+            // 6. Thông tin pin
             const batteryData = {};
             try {
                 if ('getBattery' in navigator) {
@@ -231,7 +288,7 @@
                 batteryData['Lỗi pin'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 6. Thông tin mạng
+            // 7. Thông tin mạng
             const networkData = {};
             try {
                 if ('connection' in navigator) {
@@ -249,7 +306,7 @@
                 networkData['Lỗi mạng'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 7. WebGL và GPU
+            // 8. WebGL và GPU
             const webglData = {};
             try {
                 const canvas = document.createElement('canvas');
@@ -272,7 +329,7 @@
                 webglData['Lỗi WebGL'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 8. WebGPU
+            // 9. WebGPU
             const webgpuData = {};
             try {
                 if ('gpu' in navigator) {
@@ -286,7 +343,7 @@
                 webgpuData['Lỗi WebGPU'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 9. Thiết bị đa phương tiện
+            // 10. Thiết bị đa phương tiện
             const mediaData = {};
             try {
                 if ('mediaDevices' in navigator && navigator.mediaDevices.enumerateDevices) {
@@ -308,7 +365,7 @@
                 mediaData['Lỗi thiết bị đa phương tiện'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 10. Định vị
+            // 11. Định vị
             const geoData = {};
             try {
                 geoData['API Geolocation'] = 'geolocation' in navigator ? 'Hỗ trợ (yêu cầu quyền)' : 'Không hỗ trợ';
@@ -319,7 +376,7 @@
                 geoData['Lỗi định vị'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 11. Hiệu suất
+            // 12. Hiệu suất
             const perfData = {};
             try {
                 const performance = window.performance || {};
@@ -338,7 +395,7 @@
                 perfData['Lỗi hiệu suất'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 12. Font enumeration
+            // 13. Font enumeration
             const fontData = {};
             try {
                 const canvas = document.createElement('canvas');
@@ -366,7 +423,7 @@
                 fontData['Lỗi phát hiện font'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 13. Canvas Fingerprint
+            // 14. Canvas Fingerprint
             const canvasData = {};
             try {
                 const canvas = document.createElement('canvas');
@@ -393,7 +450,7 @@
                 canvasData['Lỗi Canvas Fingerprint'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 14. Audio Fingerprint
+            // 15. Audio Fingerprint
             const audioData = {};
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -425,7 +482,7 @@
                 audioData['Lỗi AudioContext'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 15. Cảm biến thiết bị
+            // 16. Cảm biến thiết bị
             const sensorData = {};
             try {
                 sensorData['Cảm biến ánh sáng'] = 'AmbientLightSensor' in window ? 'Hỗ trợ' : 'Không hỗ trợ';
@@ -445,7 +502,7 @@
                 sensorData['Lỗi cảm biến'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 16. WebRTC
+            // 17. WebRTC
             const webrtcData = {};
             try {
                 const rtc = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
@@ -466,7 +523,7 @@
                 webrtcData['Lỗi WebRTC'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 17. Lịch sử điều hướng
+            // 18. Lịch sử điều hướng
             const historyData = {};
             try {
                 historyData['Số trang trong lịch sử'] = window.history.length;
@@ -476,7 +533,7 @@
                 historyData['Lỗi lịch sử'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 18. Hành vi người dùng
+            // 19. Hành vi người dùng
             const behaviorData = {};
             try {
                 let keyEvents = 0, mouseEvents = 0, touchEvents = 0;
@@ -497,7 +554,7 @@
                 behaviorData['Lỗi hành vi'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 19. Phát hiện giả mạo (DevTools, kích thước cửa sổ)
+            // 20. Phát hiện giả mạo (DevTools, kích thước cửa sổ)
             const spoofData = {};
             try {
                 spoofData['DevTools mở'] = window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100 ? 'Có thể' : 'Không';
@@ -509,7 +566,7 @@
                 spoofData['Lỗi phát hiện giả mạo'] = `<span class="error">${e.message}</span>`;
             }
 
-            // 20. Tính năng trình duyệt
+            // 21. Tính năng trình duyệt
             const featureData = {
                 'Service Worker': 'serviceWorker' in navigator ? 'Hỗ trợ' : 'Không hỗ trợ',
                 'WebAssembly': typeof WebAssembly === 'object' ? 'Hỗ trợ' : 'Không hỗ trợ',
@@ -525,7 +582,7 @@
                 addAuthenticityFactor('Vibration API hỗ trợ, phù hợp thiết bị di động', 5);
             }
 
-            // 21. CSS Media Queries
+            // 22. CSS Media Queries
             const cssData = {};
             try {
                 cssData['Mức zoom'] = window.matchMedia('(min-device-pixel-ratio: 2)').matches ? 'Cao' : 'Bình thường';
@@ -549,6 +606,7 @@
             // Thêm tất cả danh mục
             await Promise.all([
                 addCategory('Thông tin trình duyệt và thiết bị', browserData),
+                addCategory('Thông tin LocalStorage', localStorageData),
                 addCategory('Hệ điều hành và nền tảng', platformData),
                 addCategory('Thông tin màn hình', screenData),
                 addCategory('Phần cứng', hardwareData),
